@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIFAワールドカップ2026 日本代表 グループF 試合日程</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+    background: linear-gradient(135deg, #bf0a30 0%, #002868 100%);
+    min-height: 100vh;
+    padding: 24px;
+    color: #1a1a1a;
+  }
+  .container {
+    max-width: 880px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+  }
+  header {
+    background: #fff;
+    padding: 32px 28px 20px;
+    text-align: center;
+    border-bottom: 4px solid #bf0a30;
+  }
+  header h1 {
+    font-size: 1.6rem;
+    color: #002868;
+    margin-bottom: 6px;
+  }
+  header p {
+    color: #666;
+    font-size: 0.95rem;
+  }
+  .group-info {
+    background: #f5f7fa;
+    padding: 16px 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #e0e4eb;
+  }
+  .group-info .label {
+    font-weight: bold;
+    color: #002868;
+  }
+  .team-chip {
+    background: #fff;
+    border: 1px solid #d0d6df;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+  }
+  .team-chip.jp {
+    background: #bf0a30;
+    color: #fff;
+    border-color: #bf0a30;
+    font-weight: bold;
+  }
+  .matches {
+    padding: 24px 28px;
+  }
+  .match {
+    display: grid;
+    grid-template-columns: 110px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 18px 16px;
+    border-radius: 10px;
+    border: 1px solid #e6e8ee;
+    margin-bottom: 12px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .match:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  }
+  .match-date {
+    text-align: center;
+    border-right: 1px solid #e6e8ee;
+    padding-right: 12px;
+  }
+  .match-date .day {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #bf0a30;
+    line-height: 1;
+  }
+  .match-date .month {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 4px;
+  }
+  .match-date .time {
+    font-size: 0.85rem;
+    color: #002868;
+    margin-top: 6px;
+    font-weight: bold;
+  }
+  .match-teams {
+    font-size: 1.05rem;
+  }
+  .match-teams .vs {
+    color: #999;
+    margin: 0 8px;
+    font-size: 0.9rem;
+  }
+  .match-teams .jp {
+    font-weight: bold;
+    color: #bf0a30;
+  }
+  .match-venue {
+    font-size: 0.85rem;
+    color: #555;
+    margin-top: 4px;
+  }
+  .matchday {
+    background: #002868;
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  footer {
+    background: #f5f7fa;
+    padding: 16px 28px;
+    font-size: 0.8rem;
+    color: #666;
+    text-align: center;
+    border-top: 1px solid #e0e4eb;
+  }
+  @media (max-width: 560px) {
+    .match {
+      grid-template-columns: 90px 1fr;
+    }
+    .matchday {
+      grid-column: 1 / -1;
+      justify-self: start;
+    }
+    header h1 { font-size: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>FIFAワールドカップ2026</h1>
+      <p>日本代表 グループF 試合日程</p>
+    </header>
+
+    <section class="group-info">
+      <span class="label">グループF:</span>
+      <span class="team-chip jp">日本</span>
+      <span class="team-chip">対戦国A</span>
+      <span class="team-chip">対戦国B</span>
+      <span class="team-chip">対戦国C</span>
+    </section>
+
+    <section class="matches">
+      <div class="match">
+        <div class="match-date">
+          <div class="day">15</div>
+          <div class="month">2026年6月</div>
+          <div class="time">10:00 JST</div>
+        </div>
+        <div>
+          <div class="match-teams">
+            <span class="jp">日本</span>
+            <span class="vs">vs</span>
+            <span>対戦国A</span>
+          </div>
+          <div class="match-venue">会場: 未定 (北中米)</div>
+        </div>
+        <div class="matchday">第1節</div>
+      </div>
+
+      <div class="match">
+        <div class="match-date">
+          <div class="day">20</div>
+          <div class="month">2026年6月</div>
+          <div class="time">11:00 JST</div>
+        </div>
+        <div>
+          <div class="match-teams">
+            <span class="jp">日本</span>
+            <span class="vs">vs</span>
+            <span>対戦国B</span>
+          </div>
+          <div class="match-venue">会場: 未定 (北中米)</div>
+        </div>
+        <div class="matchday">第2節</div>
+      </div>
+
+      <div class="match">
+        <div class="match-date">
+          <div class="day">25</div>
+          <div class="month">2026年6月</div>
+          <div class="time">9:00 JST</div>
+        </div>
+        <div>
+          <div class="match-teams">
+            <span class="jp">日本</span>
+            <span class="vs">vs</span>
+            <span>対戦国C</span>
+          </div>
+          <div class="match-venue">会場: 未定 (北中米)</div>
+        </div>
+        <div class="matchday">第3節</div>
+      </div>
+    </section>
+
+    <footer>
+      ※ 対戦相手・キックオフ時刻・会場は最新の組み合わせ抽選結果に基づき更新してください。<br>
+      公式情報は <strong>FIFA.com</strong> / <strong>JFA.jp</strong> をご確認ください。
+    </footer>
+  </div>
+</body>
+</html>
