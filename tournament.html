@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIFAワールドカップ2026 トーナメントシミュレーター</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+    background: linear-gradient(135deg, #0a2540 0%, #1a4d8f 50%, #c8102e 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #1a1a1a;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+  header {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 24px;
+  }
+  header h1 { font-size: 1.8rem; margin-bottom: 6px; text-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+  header p { opacity: 0.9; font-size: 0.95rem; }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  button {
+    background: #fff;
+    color: #0a2540;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.12s, box-shadow 0.12s;
+  }
+  button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.22); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.primary { background: #c8102e; color: #fff; }
+  button.ghost { background: rgba(255,255,255,0.15); color: #fff; backdrop-filter: blur(4px); }
+
+  .panel {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  }
+  .panel h2 {
+    color: #0a2540;
+    border-bottom: 3px solid #c8102e;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+    font-size: 1.2rem;
+  }
+
+  .groups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 14px;
+  }
+  .group-card {
+    border: 1px solid #e2e6ee;
+    border-radius: 10px;
+    padding: 12px;
+    background: #fafbfd;
+  }
+  .group-title {
+    font-weight: bold;
+    color: #0a2540;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+  }
+  table.standings {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  table.standings th, table.standings td {
+    padding: 4px 6px;
+    text-align: center;
+    border-bottom: 1px solid #eef0f5;
+  }
+  table.standings th { background: #0a2540; color: #fff; font-weight: normal; font-size: 0.75rem; }
+  table.standings td.team { text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px; }
+  tr.qualified { background: #e8f5e9; }
+  tr.qualified td { font-weight: bold; }
+  .flag { display: inline-block; width: 1.2em; }
+
+  .bracket {
+    overflow-x: auto;
+    padding-bottom: 10px;
+  }
+  .rounds {
+    display: flex;
+    gap: 14px;
+    min-width: max-content;
+  }
+  .round {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    min-width: 180px;
+    gap: 10px;
+  }
+  .round h3 {
+    text-align: center;
+    color: #0a2540;
+    font-size: 0.85rem;
+    background: #f0f3f8;
+    padding: 6px;
+    border-radius: 6px;
+  }
+  .match {
+    background: #fafbfd;
+    border: 1px solid #e2e6ee;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .match .slot {
+    padding: 8px 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+    border-bottom: 1px solid #eef0f5;
+  }
+  .match .slot:last-child { border-bottom: none; }
+  .match .slot:hover:not(.empty):not(.eliminated) { background: #fff7e6; }
+  .match .slot.winner { background: #c8e6c9; font-weight: bold; }
+  .match .slot.eliminated { color: #aaa; text-decoration: line-through; cursor: default; }
+  .match .slot.empty { color: #bbb; cursor: default; font-style: italic; }
+  .match .slot .score {
+    font-weight: bold;
+    color: #c8102e;
+    font-variant-numeric: tabular-nums;
+  }
+  .champion-banner {
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    color: #0a2540;
+    padding: 28px;
+    text-align: center;
+    border-radius: 14px;
+    margin-top: 20px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    box-shadow: 0 10px 30px rgba(255,140,0,0.4);
+    display: none;
+  }
+  .champion-banner.show { display: block; animation: pop 0.6s ease; }
+  @keyframes pop {
+    0% { transform: scale(0.7); opacity: 0; }
+    60% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .hint {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 12px;
+    background: #fffbe6;
+    padding: 8px 12px;
+    border-left: 3px solid #ffc107;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🏆 FIFAワールドカップ2026 トーナメントシミュレーター</h1>
+    <p>48チーム / 12グループ / 北中米共催 (米国・カナダ・メキシコ)</p>
+  </header>
+
+  <div class="controls">
+    <button class="primary" id="simAll">⚡ 全試合自動シミュレート</button>
+    <button id="simGroups">グループステージのみ</button>
+    <button class="ghost" id="reset">🔄 リセット</button>
+  </div>
+
+  <div class="panel">
+    <h2>グループステージ</h2>
+    <div class="hint">各グループの「試合を行う」ボタンで結果を生成。上位2位+成績上位3位8チームが決勝T進出。</div>
+    <div class="groups-grid" id="groups"></div>
+  </div>
+
+  <div class="panel">
+    <h2>決勝トーナメント</h2>
+    <div class="hint">クリックで勝者を選択 (または自動シミュレート)。緑=勝者、グレー=敗退。</div>
+    <div class="bracket"><div class="rounds" id="bracket"></div></div>
+    <div class="champion-banner" id="champion"></div>
+  </div>
+</div>
+
+<script>
+const TEAMS = [
+  // [name, flag, rating, group]
+  ["カナダ","🇨🇦",78,"A"],["メキシコ","🇲🇽",80,"A"],["エクアドル","🇪🇨",79,"A"],["ウズベキスタン","🇺🇿",73,"A"],
+  ["アメリカ","🇺🇸",81,"B"],["ウェールズ","🏴󠁧󠁢󠁷󠁬󠁳󠁿",77,"B"],["パナマ","🇵🇦",73,"B"],["ヨルダン","🇯🇴",70,"B"],
+  ["アルゼンチン","🇦🇷",92,"C"],["クロアチア","🇭🇷",84,"C"],["ナイジェリア","🇳🇬",80,"C"],["ニュージーランド","🇳🇿",68,"C"],
+  ["フランス","🇫🇷",91,"D"],["セネガル","🇸🇳",81,"D"],["ポーランド","🇵🇱",78,"D"],["コスタリカ","🇨🇷",72,"D"],
+  ["スペイン","🇪🇸",89,"E"],["デンマーク","🇩🇰",81,"E"],["カメルーン","🇨🇲",76,"E"],["カタール","🇶🇦",71,"E"],
+  ["日本","🇯🇵",83,"F"],["ベルギー","🇧🇪",85,"F"],["エジプト","🇪🇬",78,"F"],["ジャマイカ","🇯🇲",72,"F"],
+  ["ブラジル","🇧🇷",90,"G"],["スイス","🇨🇭",81,"G"],["コートジボワール","🇨🇮",78,"G"],["サウジアラビア","🇸🇦",73,"G"],
+  ["ポルトガル","🇵🇹",88,"H"],["ウルグアイ","🇺🇾",84,"H"],["チュニジア","🇹🇳",75,"H"],["イラン","🇮🇷",76,"H"],
+  ["ドイツ","🇩🇪",87,"I"],["コロンビア","🇨🇴",83,"I"],["ガーナ","🇬🇭",76,"I"],["韓国","🇰🇷",80,"I"],
+  ["オランダ","🇳🇱",87,"J"],["モロッコ","🇲🇦",82,"J"],["セルビア","🇷🇸",79,"J"],["オーストラリア","🇦🇺",76,"J"],
+  ["イタリア","🇮🇹",86,"K"],["トルコ","🇹🇷",80,"K"],["アルジェリア","🇩🇿",76,"K"],["パラグアイ","🇵🇾",74,"K"],
+  ["イングランド","🏴󠁧󠁢󠁥󠁮󠁧󠁿",88,"L"],["オーストリア","🇦🇹",80,"L"],["ノルウェー","🇳🇴",81,"L"],["ウクライナ","🇺🇦",78,"L"],
+];
+
+const state = {
+  groups: {},   // 'A': [{team, p, w, d, l, gf, ga, pts}, ...]
+  matches: {},  // round name -> [{a, b, scoreA, scoreB, winner}]
+  thirds: [],
+};
+
+function init() {
+  state.groups = {};
+  state.matches = {};
+  state.thirds = [];
+  TEAMS.forEach(t => {
+    const g = t[3];
+    if (!state.groups[g]) state.groups[g] = [];
+    state.groups[g].push({ name: t[0], flag: t[1], rating: t[2], played: false, w:0, d:0, l:0, gf:0, ga:0, pts:0 });
+  });
+  renderGroups();
+  renderBracket([]);
+  document.getElementById('champion').classList.remove('show');
+}
+
+function simulateMatch(a, b) {
+  // expected goals based on rating diff
+  const diff = (a.rating - b.rating) / 10;
+  const lambdaA = Math.max(0.2, 1.3 + diff * 0.5);
+  const lambdaB = Math.max(0.2, 1.3 - diff * 0.5);
+  const ga = poisson(lambdaA);
+  const gb = poisson(lambdaB);
+  return [ga, gb];
+}
+function poisson(lambda) {
+  const L = Math.exp(-lambda);
+  let k = 0, p = 1;
+  do { k++; p *= Math.random(); } while (p > L);
+  return k - 1;
+}
+
+function playGroup(g) {
+  const teams = state.groups[g];
+  teams.forEach(t => { t.played = false; t.w=0; t.d=0; t.l=0; t.gf=0; t.ga=0; t.pts=0; });
+  const pairs = [[0,1],[2,3],[0,2],[1,3],[0,3],[1,2]];
+  pairs.forEach(([i,j]) => {
+    const [ga, gb] = simulateMatch(teams[i], teams[j]);
+    teams[i].gf += ga; teams[i].ga += gb;
+    teams[j].gf += gb; teams[j].ga += ga;
+    if (ga > gb) { teams[i].w++; teams[i].pts += 3; teams[j].l++; }
+    else if (gb > ga) { teams[j].w++; teams[j].pts += 3; teams[i].l++; }
+    else { teams[i].d++; teams[j].d++; teams[i].pts++; teams[j].pts++; }
+  });
+  teams.forEach(t => t.played = true);
+  teams.sort((a,b) => b.pts - a.pts || (b.gf-b.ga)-(a.gf-a.ga) || b.gf-a.gf || Math.random()-0.5);
+  renderGroups();
+}
+
+function playAllGroups() {
+  Object.keys(state.groups).forEach(playGroup);
+  buildKnockout();
+}
+
+function buildKnockout() {
+  // gather top 2 from each group + 8 best 3rd place teams
+  const firsts = {}, seconds = {}, thirds = [];
+  Object.keys(state.groups).forEach(g => {
+    const ts = state.groups[g];
+    if (!ts[0].played) return;
+    firsts[g] = ts[0]; seconds[g] = ts[1]; thirds.push({ ...ts[2], group: g });
+  });
+  if (Object.keys(firsts).length < 12) return;
+  thirds.sort((a,b) => b.pts-a.pts || (b.gf-b.ga)-(a.gf-a.ga) || b.gf-a.gf);
+  const top8thirds = thirds.slice(0, 8);
+  state.groups['A'][2].qualifiedThird = false;
+  Object.keys(state.groups).forEach(g => { state.groups[g][2].qualifiedThird = false; });
+  top8thirds.forEach(t => { state.groups[t.group][2].qualifiedThird = true; });
+  renderGroups();
+
+  // Build R32 pairings: simple bracket layout
+  // Pair 1st/2nd/3rd across groups - simplified pairing
+  const pool = [];
+  ['A','B','C','D','E','F','G','H','I','J','K','L'].forEach(g => {
+    pool.push(firsts[g]); pool.push(seconds[g]);
+  });
+  top8thirds.forEach(t => pool.push(t));
+  // pool length 32
+  // Pair them: 0v31, 1v30, ... to give variety
+  const r32 = [];
+  for (let i = 0; i < 16; i++) {
+    r32.push({ a: pool[i], b: pool[31 - i], winner: null, scoreA: null, scoreB: null });
+  }
+  state.matches['R32'] = r32;
+  state.matches['R16'] = Array.from({length:8}, () => ({ a:null, b:null, winner:null }));
+  state.matches['QF']  = Array.from({length:4}, () => ({ a:null, b:null, winner:null }));
+  state.matches['SF']  = Array.from({length:2}, () => ({ a:null, b:null, winner:null }));
+  state.matches['F']   = [{ a:null, b:null, winner:null }];
+  renderBracket();
+}
+
+function pickWinner(round, idx, side) {
+  const m = state.matches[round][idx];
+  if (!m.a || !m.b) return;
+  if (m.winner) return; // already decided
+  const winner = side === 'a' ? m.a : m.b;
+  // simulate score for show
+  let [sa, sb] = simulateMatch(m.a, m.b);
+  // ensure winner has more goals
+  if (side === 'a' && sa <= sb) { sa = sb + 1; }
+  if (side === 'b' && sb <= sa) { sb = sa + 1; }
+  m.scoreA = sa; m.scoreB = sb; m.winner = winner;
+  advance(round, idx, winner);
+  renderBracket();
+}
+
+function simulateMatchObj(m) {
+  if (!m.a || !m.b || m.winner) return;
+  let [sa, sb] = simulateMatch(m.a, m.b);
+  if (sa === sb) { (Math.random() < 0.5) ? sa++ : sb++; }
+  m.scoreA = sa; m.scoreB = sb;
+  m.winner = sa > sb ? m.a : m.b;
+}
+
+function advance(round, idx, winner) {
+  const next = { 'R32':'R16', 'R16':'QF', 'QF':'SF', 'SF':'F', 'F':null }[round];
+  if (!next) {
+    showChampion(winner);
+    return;
+  }
+  const nextIdx = Math.floor(idx / 2);
+  const slot = idx % 2 === 0 ? 'a' : 'b';
+  state.matches[next][nextIdx][slot] = winner;
+}
+
+function simulateAll() {
+  if (!state.groups['A'][0].played) playAllGroups();
+  else if (!state.matches['R32']) buildKnockout();
+  ['R32','R16','QF','SF','F'].forEach(round => {
+    state.matches[round].forEach((m, idx) => {
+      simulateMatchObj(m);
+      if (m.winner) advance(round, idx, m.winner);
+    });
+  });
+  renderBracket();
+}
+
+function showChampion(team) {
+  const el = document.getElementById('champion');
+  el.innerHTML = `🏆 優勝: ${team.flag} ${team.name} 🏆`;
+  el.classList.add('show');
+}
+
+// ---------- rendering ----------
+function renderGroups() {
+  const container = document.getElementById('groups');
+  container.innerHTML = '';
+  Object.keys(state.groups).sort().forEach(g => {
+    const teams = state.groups[g];
+    const card = document.createElement('div');
+    card.className = 'group-card';
+    const played = teams[0].played;
+    card.innerHTML = `
+      <div class="group-title">Group ${g}</div>
+      <table class="standings">
+        <thead><tr><th>チーム</th><th>勝</th><th>分</th><th>負</th><th>得失</th><th>勝点</th></tr></thead>
+        <tbody>
+          ${teams.map((t, i) => {
+            const qualified = played && (i < 2 || t.qualifiedThird);
+            return `<tr class="${qualified ? 'qualified' : ''}">
+              <td class="team">${t.flag} ${t.name}</td>
+              <td>${t.w}</td><td>${t.d}</td><td>${t.l}</td>
+              <td>${t.gf - t.ga >= 0 ? '+' : ''}${t.gf - t.ga}</td>
+              <td>${t.pts}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+      <button style="margin-top:8px; width:100%; padding:6px; font-size:0.8rem;" onclick="playGroup('${g}'); if(allGroupsDone()) buildKnockout();">
+        ${played ? '🔄 再シミュレート' : '▶ 試合を行う'}
+      </button>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function allGroupsDone() {
+  return Object.keys(state.groups).every(g => state.groups[g][0].played);
+}
+
+function renderBracket() {
+  const container = document.getElementById('bracket');
+  container.innerHTML = '';
+  const labels = { 'R32':'ベスト32', 'R16':'ベスト16', 'QF':'準々決勝', 'SF':'準決勝', 'F':'決勝' };
+  if (!state.matches['R32']) {
+    container.innerHTML = '<div style="padding:20px; color:#888;">グループステージを完了させてください</div>';
+    return;
+  }
+  ['R32','R16','QF','SF','F'].forEach(round => {
+    const col = document.createElement('div');
+    col.className = 'round';
+    col.innerHTML = `<h3>${labels[round]}</h3>`;
+    state.matches[round].forEach((m, idx) => {
+      const matchEl = document.createElement('div');
+      matchEl.className = 'match';
+      matchEl.innerHTML = `
+        ${slotHtml(m, 'a', round, idx)}
+        ${slotHtml(m, 'b', round, idx)}
+      `;
+      col.appendChild(matchEl);
+    });
+    container.appendChild(col);
+  });
+}
+
+function slotHtml(m, side, round, idx) {
+  const team = m[side];
+  if (!team) return `<div class="slot empty">未定</div>`;
+  const isWinner = m.winner === team;
+  const isLoser = m.winner && m.winner !== team;
+  const score = m.scoreA != null ? (side === 'a' ? m.scoreA : m.scoreB) : '';
+  const cls = isWinner ? 'winner' : isLoser ? 'eliminated' : '';
+  return `<div class="slot ${cls}" onclick="pickWinner('${round}', ${idx}, '${side}')">
+    <span>${team.flag} ${team.name}</span>
+    <span class="score">${score}</span>
+  </div>`;
+}
+
+document.getElementById('simAll').onclick = simulateAll;
+document.getElementById('simGroups').onclick = playAllGroups;
+document.getElementById('reset').onclick = init;
+
+init();
+</script>
+</body>
+</html>
