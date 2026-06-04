@@ -228,10 +228,37 @@ window.WC_DATA = {
       id: "netherlands", name_en: "Netherlands", name_jp: "オランダ", flag: "🇳🇱",
       confederation: "UEFA", group: "F", fifa_rank: 7,
       coach: "Ronald Koeman", nickname_en: "Oranje", nickname_jp: "オラニエ",
-      note: "日本と同組(F組)。初戦の相手。優勝候補の一角。", players: [
+      note: "日本と同組(F組)。初戦の相手(6/14)。優勝候補の一角。26名フル登録。", players: [
+        /* GK */
+        { number: 1, pos: "GK", name_en: "Bart Verbruggen", name_jp: "バルト・フェルブルッヘン", club_en: "Brighton", club_jp: "ブライトン", age: 23, caps: 20, goals: 0, height_cm: 193, foot: "右", traits: "正守護神。足元の技術と反応に優れる若き守護神。" },
+        { number: 13, pos: "GK", name_en: "Mark Flekken", name_jp: "マルク・フレッケン", club_en: "Bayer Leverkusen", club_jp: "レバークーゼン", age: 32, caps: 12, goals: 0, height_cm: 194, foot: "右", traits: "配球に長けた経験豊富なGK。" },
+        { number: 23, pos: "GK", name_en: "Robin Roefs", name_jp: "ロビン・ルーフス", club_en: "Sunderland", club_jp: "サンダーランド", age: 23, caps: 3, goals: 0, height_cm: 190, foot: "右", traits: "台頭する若手GK。" },
+        /* DF */
         { number: 4, pos: "DF", name_en: "Virgil van Dijk", name_jp: "フィルジル・ファン・ダイク", club_en: "Liverpool", club_jp: "リバプール", age: 34, caps: 80, goals: 9, height_cm: 195, foot: "右", traits: "キャプテン。世界最高峰のCB。対人・空中戦・統率力。" },
-        { number: 4, pos: "MF", name_en: "Frenkie de Jong", name_jp: "フレンキー・デ・ヨング", club_en: "Barcelona", club_jp: "バルセロナ", age: 28, caps: 60, goals: 3, height_cm: 181, foot: "右", traits: "運ぶドリブルと配球で中盤を支配。" },
-        { number: 11, pos: "FW", name_en: "Cody Gakpo", name_jp: "コディ・ガクポ", club_en: "Liverpool", club_jp: "リバプール", age: 26, caps: 40, goals: 15, height_cm: 193, foot: "右", traits: "左から仕掛ける長身アタッカー。得点力。" }
+        { number: 5, pos: "DF", name_en: "Nathan Aké", name_jp: "ナタン・アケ", club_en: "Manchester City", club_jp: "マンチェスター・シティ", age: 30, caps: 50, goals: 3, height_cm: 180, foot: "左", traits: "左利きで複数ポジションをこなす万能DF。" },
+        { number: 22, pos: "DF", name_en: "Denzel Dumfries", name_jp: "デンゼル・ダンフリース", club_en: "Inter", club_jp: "インテル", age: 29, caps: 60, goals: 9, height_cm: 188, foot: "右", traits: "推進力抜群の右WB。得点関与も多い。" },
+        { number: 2, pos: "DF", name_en: "Jurriën Timber", name_jp: "ユリエン・ティンバー", club_en: "Arsenal", club_jp: "アーセナル", age: 24, caps: 25, goals: 1, height_cm: 179, foot: "右", traits: "対人と運び出しに優れるモダンなDF。" },
+        { number: 3, pos: "DF", name_en: "Micky van de Ven", name_jp: "ミッキー・ファン・デ・フェン", club_en: "Tottenham", club_jp: "トッテナム", age: 24, caps: 20, goals: 0, height_cm: 193, foot: "左", traits: "圧倒的スピードを持つ左利きCB。" },
+        { number: 15, pos: "DF", name_en: "Jan Paul van Hecke", name_jp: "ヤン・パウル・ファン・ヘッケ", club_en: "Brighton", club_jp: "ブライトン", age: 25, caps: 8, goals: 0, height_cm: 188, foot: "右", traits: "ビルドアップに関与できるCB。" },
+        { number: 17, pos: "DF", name_en: "Jorrel Hato", name_jp: "ヨレル・ハト", club_en: "Chelsea", club_jp: "チェルシー", age: 19, caps: 12, goals: 0, height_cm: 188, foot: "左", traits: "左SB/CBをこなす逸材。落ち着いた対応。" },
+        /* MF */
+        { number: 21, pos: "MF", name_en: "Frenkie de Jong", name_jp: "フレンキー・デ・ヨング", club_en: "Barcelona", club_jp: "バルセロナ", age: 28, caps: 60, goals: 3, height_cm: 181, foot: "右", traits: "運ぶドリブルと配球で中盤を支配する心臓。" },
+        { number: 6, pos: "MF", name_en: "Ryan Gravenberch", name_jp: "ライアン・フラーフェンベルフ", club_en: "Liverpool", club_jp: "リバプール", age: 23, caps: 30, goals: 2, height_cm: 190, foot: "右", traits: "体格と機動力を兼ね備えたボックス・トゥ・ボックス。" },
+        { number: 8, pos: "MF", name_en: "Tijjani Reijnders", name_jp: "ティヤニ・ラインデルス", club_en: "Manchester City", club_jp: "マンチェスター・シティ", age: 27, caps: 25, goals: 5, height_cm: 185, foot: "右", traits: "前進と得点関与に長けるインサイドハーフ。" },
+        { number: 14, pos: "MF", name_en: "Teun Koopmeiners", name_jp: "タウン・コープマイネルス", club_en: "Juventus", club_jp: "ユベントス", age: 28, caps: 30, goals: 4, height_cm: 183, foot: "右", traits: "左足のキックとセットプレー、得点力。" },
+        { number: 20, pos: "MF", name_en: "Marten de Roon", name_jp: "マルテン・デ・ローン", club_en: "Atalanta", club_jp: "アタランタ", age: 34, caps: 45, goals: 2, height_cm: 184, foot: "右", traits: "潰し役として中盤を締めるベテラン。" },
+        { number: 18, pos: "MF", name_en: "Mats Wieffer", name_jp: "マッツ・ウィーファー", club_en: "Brighton", club_jp: "ブライトン", age: 26, caps: 15, goals: 0, height_cm: 186, foot: "右", traits: "守備的MFで安定したバランサー。" },
+        { number: 19, pos: "MF", name_en: "Quinten Timber", name_jp: "クインテン・ティンバー", club_en: "Marseille", club_jp: "マルセイユ", age: 24, caps: 8, goals: 1, height_cm: 175, foot: "右", traits: "運動量と推進力のあるMF。" },
+        { number: 25, pos: "MF", name_en: "Guus Til", name_jp: "グース・ティル", club_en: "PSV", club_jp: "PSV", age: 28, caps: 12, goals: 3, height_cm: 187, foot: "右", traits: "飛び出しと得点感覚に長ける。" },
+        { number: 26, pos: "MF", name_en: "Noah Lang", name_jp: "ノア・ラング", club_en: "Galatasaray", club_jp: "ガラタサライ", age: 26, caps: 10, goals: 2, height_cm: 178, foot: "右", traits: "ドリブルで仕掛けるアタッカー型MF。" },
+        /* FW */
+        { number: 11, pos: "FW", name_en: "Cody Gakpo", name_jp: "コディ・ガクポ", club_en: "Liverpool", club_jp: "リバプール", age: 26, caps: 40, goals: 15, height_cm: 193, foot: "右", traits: "左から仕掛ける長身アタッカー。得点力。" },
+        { number: 10, pos: "FW", name_en: "Memphis Depay", name_jp: "メンフィス・デパイ", club_en: "Corinthians", club_jp: "コリンチャンス", age: 32, caps: 100, goals: 50, height_cm: 176, foot: "右", traits: "オランダ歴代最多得点。創造性と決定力。" },
+        { number: 9, pos: "FW", name_en: "Wout Weghorst", name_jp: "ワウト・ウェフホルスト", club_en: "Ajax", club_jp: "アヤックス", age: 33, caps: 35, goals: 13, height_cm: 197, foot: "右", traits: "高さと勝負強さを誇るターゲットマン。" },
+        { number: 7, pos: "FW", name_en: "Donyell Malen", name_jp: "ドニエル・マレン", club_en: "AS Roma", club_jp: "ローマ", age: 27, caps: 40, goals: 12, height_cm: 178, foot: "右", traits: "スピードと裏抜けが武器のウインガー。" },
+        { number: 12, pos: "FW", name_en: "Brian Brobbey", name_jp: "ブライアン・ブロベイ", club_en: "Sunderland", club_jp: "サンダーランド", age: 24, caps: 12, goals: 2, height_cm: 180, foot: "右", traits: "パワフルなポストと推進力。" },
+        { number: 16, pos: "FW", name_en: "Justin Kluivert", name_jp: "ジャスティン・クライファート", club_en: "Bournemouth", club_jp: "ボーンマス", age: 26, caps: 15, goals: 3, height_cm: 171, foot: "右", traits: "両サイドで仕掛ける切れ味鋭いアタッカー。" },
+        { number: 24, pos: "FW", name_en: "Crysencio Summerville", name_jp: "クライセンシオ・サマービル", club_en: "West Ham", club_jp: "ウェストハム", age: 24, caps: 8, goals: 1, height_cm: 174, foot: "右", traits: "ドリブルとカットインが持ち味のウインガー。" }
       ]
     },
     {
@@ -253,7 +280,7 @@ window.WC_DATA = {
         { number: 16, pos: "DF", name_en: "Takehiro Tomiyasu", name_jp: "冨安 健洋 (とみやす たけひろ)", club_en: "Arsenal", club_jp: "アーセナル", age: 27, caps: 45, goals: 2, height_cm: 188, foot: "右", traits: "複数ポジションをこなすマルチDF。対人の強さと戦術理解。" },
         { number: 19, pos: "DF", name_en: "Hiroki Ito", name_jp: "伊藤 洋輝 (いとう ひろき)", club_en: "Bayern Munich", club_jp: "バイエルン・ミュンヘン", age: 27, caps: 25, goals: 1, height_cm: 188, foot: "左", traits: "左利きCB/SB。左足の展開力とロングフィード。" },
         { number: 22, pos: "DF", name_en: "Koki Machida", name_jp: "町田 浩樹 (まちだ こうき)", club_en: "Hoffenheim", club_jp: "ホッフェンハイム", age: 28, caps: 18, goals: 1, height_cm: 190, foot: "左", traits: "長身左利きCB。空中戦と落ち着いた対応。" },
-        { number: 26, pos: "DF", name_en: "Go Hatano", name_jp: "畑野? (代表例)", club_en: "—", club_jp: "—", age: 24, caps: 5, goals: 0, height_cm: 180, foot: "右", traits: "（補欠枠の例。確定情報で上書きしてください）" },
+        { number: 26, pos: "DF", name_en: "Ayumu Seko", name_jp: "瀬古 歩夢 (せこ あゆむ)", club_en: "Le Havre", club_jp: "ル・アーヴル", age: 25, caps: 10, goals: 0, height_cm: 182, foot: "右", traits: "対人とカバーに優れる若手CB。欧州で経験を積む。" },
 
         /* --- MF --- */
         { number: 6, pos: "MF", name_en: "Wataru Endo", name_jp: "遠藤 航 (えんどう わたる)", club_en: "Liverpool", club_jp: "リバプール", age: 33, caps: 65, goals: 3, height_cm: 178, foot: "右", traits: "キャプテン。アンカーとしての潰しとセカンドボール回収、リーダーシップ。" },
@@ -271,24 +298,82 @@ window.WC_DATA = {
         { number: 15, pos: "FW", name_en: "Kyogo Furuhashi", name_jp: "古橋 亨梧 (ふるはし きょうご)", club_en: "Rennes", club_jp: "レンヌ", age: 31, caps: 20, goals: 4, height_cm: 170, foot: "右", traits: "抜群のオフザボールと決定力を持つ快速ストライカー。" },
         { number: 18, pos: "FW", name_en: "Koki Ogawa", name_jp: "小川 航基 (おがわ こうき)", club_en: "NEC Nijmegen", club_jp: "NECナイメヘン", age: 28, caps: 15, goals: 6, height_cm: 186, foot: "右", traits: "高さと空中戦に強いターゲットマン。" },
         { number: 20, pos: "MF", name_en: "Reo Hatate", name_jp: "旗手 怜央 (はたて れお)", club_en: "Celtic", club_jp: "セルティック", age: 28, caps: 12, goals: 1, height_cm: 174, foot: "左", traits: "左利きの万能MF。配球と推進力。" },
-        { number: 24, pos: "DF", name_en: "Daiki Hashioka", name_jp: "橋岡 大樹 (はしおか だいき)", club_en: "Luton Town", club_jp: "ルートン・タウン", age: 26, caps: 8, goals: 0, height_cm: 186, foot: "右", traits: "サイドと中央をこなせる長身DF。対人とフィジカル。" }
+        { number: 24, pos: "DF", name_en: "Daiki Hashioka", name_jp: "橋岡 大樹 (はしおか だいき)", club_en: "Luton Town", club_jp: "ルートン・タウン", age: 26, caps: 8, goals: 0, height_cm: 186, foot: "右", traits: "サイドと中央をこなせる長身DF。対人とフィジカル。" },
+        { number: 25, pos: "FW", name_en: "Keito Nakamura", name_jp: "中村 敬斗 (なかむら けいと)", club_en: "Stade de Reims", club_jp: "スタッド・ランス", age: 25, caps: 20, goals: 6, height_cm: 174, foot: "右", traits: "左ウイングからのカットインと得点力。勝負強い左サイドの仕掛け役。" }
       ]
     },
     {
       id: "sweden", name_en: "Sweden", name_jp: "スウェーデン", flag: "🇸🇪",
       confederation: "UEFA", group: "F", fifa_rank: 38,
       coach: "Graham Potter", nickname_en: "Blågult", nickname_jp: "ブロー・ギュル",
-      note: "日本と同組。第3戦(6/25)の相手。強力2トップが武器。", players: [
+      note: "日本と同組。第3戦(6/25)の相手。強力2トップが武器。監督グレアム・ポッター。26名フル登録。", players: [
+        /* GK */
+        { number: 1, pos: "GK", name_en: "Viktor Johansson", name_jp: "ヴィクトル・ヨハンソン", club_en: "Stoke City", club_jp: "ストーク・シティ", age: 27, caps: 10, goals: 0, height_cm: 192, foot: "右", traits: "安定したシュートストップを誇る正守護神候補。" },
+        { number: 12, pos: "GK", name_en: "Kristoffer Nordfeldt", name_jp: "クリストファー・ノルドフェルト", club_en: "AIK", club_jp: "AIK", age: 36, caps: 25, goals: 0, height_cm: 192, foot: "右", traits: "経験豊富なベテランGK。" },
+        { number: 23, pos: "GK", name_en: "Jacob Zetterström", name_jp: "ヤコブ・セッテルストレム", club_en: "Derby County", club_jp: "ダービー・カウンティ", age: 27, caps: 2, goals: 0, height_cm: 196, foot: "右", traits: "長身の若手GK。" },
+        /* DF */
+        { number: 3, pos: "DF", name_en: "Victor Lindelöf", name_jp: "ヴィクトル・リンデロフ", club_en: "Aston Villa", club_jp: "アストン・ヴィラ", age: 31, caps: 75, goals: 4, height_cm: 187, foot: "右", traits: "経験豊富な統率役CB。落ち着いた対応と配球。" },
+        { number: 4, pos: "DF", name_en: "Isak Hien", name_jp: "イサク・ヒエン", club_en: "Atalanta", club_jp: "アタランタ", age: 26, caps: 20, goals: 0, height_cm: 192, foot: "右", traits: "対人とスピードに優れる長身CB。" },
+        { number: 2, pos: "DF", name_en: "Hjalmar Ekdal", name_jp: "ヒャルマル・エクダル", club_en: "Burnley", club_jp: "バーンリー", age: 27, caps: 12, goals: 0, height_cm: 187, foot: "右", traits: "堅実な守備とビルドアップ。" },
+        { number: 5, pos: "DF", name_en: "Carl Starfelt", name_jp: "カール・スターフェルト", club_en: "Celta Vigo", club_jp: "セルタ", age: 30, caps: 20, goals: 0, height_cm: 187, foot: "右", traits: "対人に強い中央の守備者。" },
+        { number: 6, pos: "DF", name_en: "Gustaf Lagerbielke", name_jp: "グスタフ・ラーゲルビエルケ", club_en: "Braga", club_jp: "ブラガ", age: 25, caps: 8, goals: 0, height_cm: 190, foot: "右", traits: "長身CB。空中戦に強い。" },
+        { number: 13, pos: "DF", name_en: "Gabriel Gudmundsson", name_jp: "ガブリエル・グドムンドソン", club_en: "Leeds United", club_jp: "リーズ・ユナイテッド", age: 26, caps: 15, goals: 0, height_cm: 182, foot: "左", traits: "攻撃参加に長けた左SB。" },
+        { number: 14, pos: "DF", name_en: "Emil Holm", name_jp: "エミル・ホルム", club_en: "Juventus", club_jp: "ユベントス", age: 25, caps: 8, goals: 0, height_cm: 191, foot: "右", traits: "縦の推進力がある右WB。" },
+        { number: 15, pos: "DF", name_en: "Daniel Svensson", name_jp: "ダニエル・スヴェンソン", club_en: "Borussia Dortmund", club_jp: "ドルトムント", age: 23, caps: 6, goals: 0, height_cm: 178, foot: "左", traits: "上下動を厭わない左サイドの選手。" },
+        { number: 17, pos: "DF", name_en: "Eric Smith", name_jp: "エリック・スミス", club_en: "St. Pauli", club_jp: "ザンクトパウリ", age: 28, caps: 12, goals: 0, height_cm: 190, foot: "右", traits: "CB/アンカーをこなす万能型。" },
+        /* MF */
+        { number: 8, pos: "MF", name_en: "Mattias Svanberg", name_jp: "マティアス・スヴァンベリ", club_en: "Wolfsburg", club_jp: "ヴォルフスブルク", age: 27, caps: 30, goals: 3, height_cm: 184, foot: "右", traits: "推進力と展開力を備える中盤の主力。" },
+        { number: 10, pos: "MF", name_en: "Lucas Bergvall", name_jp: "ルーカス・ベリヴァル", club_en: "Tottenham", club_jp: "トッテナム", age: 19, caps: 10, goals: 1, height_cm: 185, foot: "右", traits: "技術と運び出しに優れる新世代の司令塔。" },
+        { number: 16, pos: "MF", name_en: "Yasin Ayari", name_jp: "ヤシン・アヤリ", club_en: "Brighton", club_jp: "ブライトン", age: 22, caps: 12, goals: 0, height_cm: 178, foot: "右", traits: "機動力とボール奪取に優れる若手MF。" },
+        { number: 18, pos: "MF", name_en: "Jesper Karlström", name_jp: "イェスペル・カールストレム", club_en: "Udinese", club_jp: "ウディネーゼ", age: 30, caps: 20, goals: 0, height_cm: 181, foot: "右", traits: "中盤の循環を支えるアンカー。" },
+        { number: 20, pos: "MF", name_en: "Ken Sema", name_jp: "ケン・セマ", club_en: "Pafos", club_jp: "パフォス", age: 32, caps: 40, goals: 4, height_cm: 184, foot: "左", traits: "左サイドの推進力とクロス。" },
+        { number: 21, pos: "MF", name_en: "Besfort Zeneli", name_jp: "ベスフォート・ゼネリ", club_en: "Union SG", club_jp: "ユニオンSG", age: 22, caps: 5, goals: 0, height_cm: 180, foot: "右", traits: "攻撃に絡める中盤の若手。" },
+        { number: 22, pos: "MF", name_en: "Elliot Stroud", name_jp: "エリオット・ストラウド", club_en: "Mjällby", club_jp: "ミャルビー", age: 24, caps: 3, goals: 0, height_cm: 180, foot: "右", traits: "国内リーグ王者の中盤。" },
+        /* FW */
         { number: 9, pos: "FW", name_en: "Alexander Isak", name_jp: "アレクサンデル・イサク", club_en: "Liverpool", club_jp: "リバプール", age: 26, caps: 45, goals: 15, height_cm: 192, foot: "右", traits: "長身ながら俊敏。ドリブルと卓越した決定力を持つエース。" },
-        { number: 11, pos: "FW", name_en: "Viktor Gyökeres", name_jp: "ヴィクトル・ヨケレス", club_en: "Arsenal", club_jp: "アーセナル", age: 27, caps: 30, goals: 18, height_cm: 187, foot: "右", traits: "パワーとスピードを兼備した点取り屋。裏抜けと強さ。" }
+        { number: 11, pos: "FW", name_en: "Viktor Gyökeres", name_jp: "ヴィクトル・ヨケレス", club_en: "Arsenal", club_jp: "アーセナル", age: 27, caps: 30, goals: 18, height_cm: 187, foot: "右", traits: "パワーとスピードを兼備した点取り屋。裏抜けと強さ。" },
+        { number: 7, pos: "FW", name_en: "Anthony Elanga", name_jp: "アンソニー・エランガ", club_en: "Newcastle United", club_jp: "ニューカッスル", age: 23, caps: 25, goals: 3, height_cm: 178, foot: "右", traits: "縦への爆発的スピードを持つウインガー。" },
+        { number: 19, pos: "FW", name_en: "Benjamin Nygren", name_jp: "ベンヤミン・ニーグレン", club_en: "Celtic", club_jp: "セルティック", age: 24, caps: 12, goals: 2, height_cm: 176, foot: "右", traits: "技巧とゴール関与に長けるアタッカー。" },
+        { number: 24, pos: "FW", name_en: "Gustaf Nilsson", name_jp: "グスタフ・ニルソン", club_en: "Club Brugge", club_jp: "クラブ・ブルッヘ", age: 28, caps: 8, goals: 3, height_cm: 195, foot: "右", traits: "長身のターゲットマン。空中戦が武器。" },
+        { number: 25, pos: "FW", name_en: "Alexander Bernhardsson", name_jp: "アレクサンデル・ベルンハードソン", club_en: "Elfsborg", club_jp: "エルフスボリ", age: 27, caps: 5, goals: 1, height_cm: 180, foot: "右", traits: "国内で実績を積んだウインガー。" },
+        { number: 26, pos: "FW", name_en: "Taha Ali", name_jp: "タハ・アリ", club_en: "Antwerp", club_jp: "アントワープ", age: 26, caps: 4, goals: 0, height_cm: 182, foot: "右", traits: "ドリブルで違いを作るアタッカー。" }
       ]
     },
     {
       id: "tunisia", name_en: "Tunisia", name_jp: "チュニジア", flag: "🇹🇳",
       confederation: "CAF", group: "F", fifa_rank: 45,
       coach: "Sami Trabelsi", nickname_en: "Eagles of Carthage", nickname_jp: "カルタゴの鷲",
-      note: "日本と同組。第2戦(6/20)の相手。堅守が持ち味。", players: [
-        { number: 10, pos: "MF", name_en: "Hannibal Mejbri", name_jp: "ハンニバル・メイブリ", club_en: "Burnley", club_jp: "バーンリー", age: 23, caps: 30, goals: 3, height_cm: 180, foot: "右", traits: "闘志あふれる中盤。技術と運動量。" }
+      note: "日本と同組。第2戦(6/20)の相手。堅守が持ち味。監督サブリ・ラムシ。26名フル登録(※クラブ未確認は—表示)。", players: [
+        /* GK */
+        { number: 1, pos: "GK", name_en: "Aymen Dahmen", name_jp: "アイメン・ダフメン", club_en: "—", club_jp: "—", age: 28, caps: 20, goals: 0, height_cm: 188, foot: "右", traits: "正守護神候補。反応に優れる。" },
+        { number: 16, pos: "GK", name_en: "Sabri Ben Hassan", name_jp: "サブリ・ベン・ハッサン", club_en: "—", club_jp: "—", age: null, caps: null, goals: 0, height_cm: null, foot: "右", traits: "控えの守護神。" },
+        { number: 23, pos: "GK", name_en: "Abdelmohib Chamekh", name_jp: "アブデルモヒブ・シャメク", club_en: "—", club_jp: "—", age: null, caps: null, goals: 0, height_cm: null, foot: "右", traits: "第3GK。" },
+        /* DF */
+        { number: 2, pos: "DF", name_en: "Montassar Talbi", name_jp: "モンタサル・タルビ", club_en: "—", club_jp: "—", age: 27, caps: 40, goals: 3, height_cm: 190, foot: "右", traits: "守備の支柱となる長身CB。空中戦に強い。" },
+        { number: 3, pos: "DF", name_en: "Dylan Bronn", name_jp: "ディラン・ブロン", club_en: "—", club_jp: "—", age: 30, caps: 40, goals: 3, height_cm: 187, foot: "右", traits: "対人に強い経験豊富なCB。" },
+        { number: 12, pos: "DF", name_en: "Ali Abdi", name_jp: "アリ・アブディ", club_en: "—", club_jp: "—", age: 31, caps: 25, goals: 0, height_cm: 178, foot: "左", traits: "攻守にバランスのとれた左SB。" },
+        { number: 4, pos: "DF", name_en: "Yan Valery", name_jp: "ヤン・ヴァレリー", club_en: "—", club_jp: "—", age: 26, caps: 12, goals: 0, height_cm: 178, foot: "右", traits: "攻撃参加に長けた右SB。" },
+        { number: 5, pos: "DF", name_en: "Omar Rekik", name_jp: "オマル・レキク", club_en: "—", club_jp: "—", age: 24, caps: 8, goals: 0, height_cm: 186, foot: "左", traits: "左利きの守備者。落ち着いた対応。" },
+        { number: 15, pos: "DF", name_en: "Mohamed Amin Ben Hamida", name_jp: "モハメド・アミン・ベン・ハミダ", club_en: "—", club_jp: "—", age: null, caps: null, goals: 0, height_cm: null, foot: "左", traits: "サイドをこなす守備的な選手。" },
+        { number: 19, pos: "DF", name_en: "Raed Sheikhaoui", name_jp: "ラエド・シェイカウィ", club_en: "—", club_jp: "—", age: null, caps: null, goals: 0, height_cm: null, foot: "右", traits: "守備の一角。" },
+        { number: 20, pos: "DF", name_en: "Moataz Nafati", name_jp: "モアタズ・ナファティ", club_en: "—", club_jp: "—", age: null, caps: null, goals: 0, height_cm: null, foot: "右", traits: "守備の一角。" },
+        { number: 22, pos: "DF", name_en: "Adam Arous", name_jp: "アダム・アルース", club_en: "—", club_jp: "—", age: null, caps: null, goals: 0, height_cm: null, foot: "左", traits: "サイドバックの選手。" },
+        /* MF */
+        { number: 6, pos: "MF", name_en: "Ellyes Skhiri", name_jp: "エリエス・スキリ", club_en: "Eintracht Frankfurt", club_jp: "アイントラハト・フランクフルト", age: 30, caps: 81, goals: 8, height_cm: 185, foot: "右", traits: "キャプテン兼最多キャップ。攻守に効く万能ボランチ。" },
+        { number: 10, pos: "MF", name_en: "Hannibal Mejbri", name_jp: "ハンニバル・メイブリ", club_en: "Burnley", club_jp: "バーンリー", age: 23, caps: 30, goals: 3, height_cm: 180, foot: "右", traits: "闘志あふれる中盤。技術と運動量。" },
+        { number: 8, pos: "MF", name_en: "Anis Ben Slimane", name_jp: "アニス・ベン・スリマン", club_en: "—", club_jp: "—", age: 24, caps: 25, goals: 2, height_cm: 184, foot: "右", traits: "推進力のあるボックス・トゥ・ボックス。" },
+        { number: 14, pos: "MF", name_en: "Rani Khedira", name_jp: "ラニ・ケディラ", club_en: "—", club_jp: "—", age: 31, caps: 12, goals: 0, height_cm: 189, foot: "右", traits: "経験豊富な守備的MF。バランサー。" },
+        { number: 17, pos: "MF", name_en: "Ismail Gharbi", name_jp: "イスマイル・ガルビ", club_en: "—", club_jp: "—", age: 21, caps: 6, goals: 0, height_cm: 174, foot: "右", traits: "技巧派の若き司令塔。" },
+        { number: 18, pos: "MF", name_en: "Mortadha Ben Ouanes", name_jp: "モルタダ・ベン・ワネス", club_en: "—", club_jp: "—", age: 30, caps: 20, goals: 0, height_cm: 180, foot: "右", traits: "サイドと中盤をこなす働き者。" },
+        { number: 21, pos: "MF", name_en: "Mohamed Haj Mahmoud", name_jp: "モハメド・ハジ・マフムード", club_en: "—", club_jp: "—", age: null, caps: null, goals: 0, height_cm: null, foot: "右", traits: "中盤の選手。" },
+        /* FW */
+        { number: 7, pos: "FW", name_en: "Sebastian Tounekti", name_jp: "セバスティアン・トゥネクティ", club_en: "—", club_jp: "—", age: 24, caps: 12, goals: 3, height_cm: 178, foot: "右", traits: "ドリブルで仕掛けるウインガー。" },
+        { number: 9, pos: "FW", name_en: "Firas Chaouat", name_jp: "フィラス・シャワット", club_en: "—", club_jp: "—", age: 28, caps: 15, goals: 5, height_cm: 183, foot: "右", traits: "ゴール前での嗅覚に優れるFW。" },
+        { number: 11, pos: "FW", name_en: "Elyes Achouri", name_jp: "エリエス・アシュリ", club_en: "—", club_jp: "—", age: 26, caps: 18, goals: 3, height_cm: 175, foot: "右", traits: "運動量豊富なサイドアタッカー。" },
+        { number: 13, pos: "FW", name_en: "Elyes Saad", name_jp: "エリエス・サード", club_en: "—", club_jp: "—", age: null, caps: null, goals: 0, height_cm: null, foot: "右", traits: "前線の選手。" },
+        { number: 24, pos: "FW", name_en: "Khalil Ayari", name_jp: "ハリル・アヤリ", club_en: "—", club_jp: "—", age: null, caps: null, goals: 0, height_cm: null, foot: "右", traits: "前線の選手。" },
+        { number: 25, pos: "FW", name_en: "Hazem Mestouri", name_jp: "ハゼム・メストゥリ", club_en: "—", club_jp: "—", age: null, caps: null, goals: 0, height_cm: null, foot: "右", traits: "前線の選手。" },
+        { number: 26, pos: "FW", name_en: "Rayan Loumi", name_jp: "ラヤン・ルミ", club_en: "—", club_jp: "—", age: null, caps: null, goals: 0, height_cm: null, foot: "右", traits: "前線の選手。" }
       ]
     },
 
