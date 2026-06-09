@@ -4,7 +4,22 @@
 **出場48カ国・選手名鑑**です。英語表記＋日本語併記で、所属チーム・代表歴・
 スタッツ・特徴を1枚のHTMLでブラウズできます。
 
-## 使い方
+## 🌐 公開URL（GitHub Pages）
+
+ブランチ配信で公開します。**初回のみ下記の設定が必要です（オーナー操作）**:
+
+1. リポジトリの **Settings → Pages** を開く
+2. **Build and deployment → Source** を **「Deploy from a branch」** に
+3. **Branch** で `claude/quirky-rubin-PwTlh` を選び、フォルダは **`/ (root)`** → **Save**
+4. 1〜2分後、下記URLで公開されます（`.nojekyll` 済みなので `data.js` もそのまま配信）
+
+```
+https://dashidanshi.github.io/Myfirstrepository/
+```
+
+> メインに反映したい場合は、このブランチを `main` にマージしてから Branch に `main` を選んでください。
+
+## 使い方（ローカル）
 
 `index.html` をブラウザで開くだけ（サーバー不要・オフライン動作）。
 
