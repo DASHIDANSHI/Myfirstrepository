@@ -43,7 +43,7 @@ class GoalRepository(private val context: Context) {
             Goal("weather", "☀️", "天気"),
             Goal("asken", "🥗", "あすけん"),
             Goal("utility", "🔧", "ユーティリティ"),
-            Goal("bad", "🙅", "ダメアプリ"),
+            Goal("other", "🗂️", "その他"),
         )
     }
 }
