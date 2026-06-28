@@ -1,5 +1,7 @@
 package com.example.intentlauncher.ui.screens
 
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,11 +20,13 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -33,9 +37,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.intentlauncher.model.AppInfo
 import com.example.intentlauncher.model.Goal
+import com.example.intentlauncher.service.AccessibilityUtil
 import com.example.intentlauncher.ui.components.AppIcon
 import java.util.UUID
 
@@ -43,28 +49,47 @@ import java.util.UUID
 fun SettingsScreen(
     goals: List<Goal>,
     installedApps: List<AppInfo>,
+    frictionPackages: Set<String>,
     onSetAllowedApps: (goalId: String, packages: List<String>) -> Unit,
+    onSetFrictionApps: (Set<String>) -> Unit,
     onAddGoal: (Goal) -> Unit,
     onRemoveGoal: (String) -> Unit,
     onBack: () -> Unit,
 ) {
     var editingGoalId by remember { mutableStateOf<String?>(null) }
+    var editingFriction by remember { mutableStateOf(false) }
     val editingGoal = goals.find { it.id == editingGoalId }
 
-    if (editingGoal != null) {
-        GoalAppEditor(
-            goal = editingGoal,
+    when {
+        editingGoal != null -> AppMultiSelectEditor(
+            title = "${editingGoal.emoji} ${editingGoal.label}",
+            subtitle = "この目的で起動できるアプリを選んでください。",
             installedApps = installedApps,
+            initialSelected = editingGoal.allowedPackages.toSet(),
             onSave = { packages ->
-                onSetAllowedApps(editingGoal.id, packages)
+                onSetAllowedApps(editingGoal.id, packages.toList())
                 editingGoalId = null
             },
             onBack = { editingGoalId = null },
         )
-    } else {
-        GoalListScreen(
+
+        editingFriction -> AppMultiSelectEditor(
+            title = "🚫 がまんリスト",
+            subtitle = "ボタンに出さず、検索＋確認＋時間制限を通さないと開けないアプリを選んでください。",
+            installedApps = installedApps,
+            initialSelected = frictionPackages,
+            onSave = { packages ->
+                onSetFrictionApps(packages)
+                editingFriction = false
+            },
+            onBack = { editingFriction = false },
+        )
+
+        else -> GoalListScreen(
             goals = goals,
+            frictionCount = frictionPackages.size,
             onEdit = { editingGoalId = it.id },
+            onEditFriction = { editingFriction = true },
             onAddGoal = onAddGoal,
             onRemoveGoal = onRemoveGoal,
             onBack = onBack,
@@ -75,7 +100,9 @@ fun SettingsScreen(
 @Composable
 private fun GoalListScreen(
     goals: List<Goal>,
+    frictionCount: Int,
     onEdit: (Goal) -> Unit,
+    onEditFriction: () -> Unit,
     onAddGoal: (Goal) -> Unit,
     onRemoveGoal: (String) -> Unit,
     onBack: () -> Unit,
@@ -87,7 +114,7 @@ private fun GoalListScreen(
             IconButton(onClick = onBack) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "戻る")
             }
-            Text("設定 — 目的とアプリ", style = MaterialTheme.typography.titleLarge)
+            Text("設定", style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.weight(1f))
             IconButton(onClick = { showAddDialog = true }) {
                 Icon(Icons.Filled.Add, contentDescription = "目的を追加")
@@ -95,14 +122,40 @@ private fun GoalListScreen(
         }
 
         Spacer(Modifier.height(8.dp))
-        Text(
-            "目的をタップすると、その目的で起動できるアプリを選べます。",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Spacer(Modifier.height(12.dp))
 
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            item { ForceBlockCard() }
+
+            item {
+                Card(modifier = Modifier.fillMaxWidth().clickable { onEditFriction() }) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text("🚫", style = MaterialTheme.typography.headlineSmall)
+                        Spacer(Modifier.size(12.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text("がまんリスト", style = MaterialTheme.typography.titleMedium)
+                            Text(
+                                "$frictionCount 個（検索しないと開けないアプリ）",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
+                }
+            }
+
+            item {
+                Spacer(Modifier.height(4.dp))
+                Text("目的とアプリ", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    "目的をタップすると、その目的で起動できるアプリを選べます。",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
             items(goals, key = { it.id }) { goal ->
                 Card(modifier = Modifier.fillMaxWidth().clickable { onEdit(goal) }) {
                     Row(
@@ -136,6 +189,47 @@ private fun GoalListScreen(
                 showAddDialog = false
             },
         )
+    }
+}
+
+@Composable
+private fun ForceBlockCard() {
+    val context = LocalContext.current
+    val enabled = AccessibilityUtil.isBlockerEnabled(context)
+
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = if (enabled) {
+                MaterialTheme.colorScheme.secondaryContainer
+            } else {
+                MaterialTheme.colorScheme.errorContainer
+            },
+        ),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(Modifier.padding(16.dp)) {
+            Text(
+                text = if (enabled) "✅ 強制ブロック：ON" else "⚠️ 強制ブロック：OFF",
+                style = MaterialTheme.typography.titleMedium,
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = if (enabled) {
+                    "がまんアプリは決めた時間で自動的に閉じます。"
+                } else {
+                    "時間で自動的に閉じるには、ユーザー補助をONにしてください。"
+                },
+                style = MaterialTheme.typography.bodySmall,
+            )
+            if (!enabled) {
+                Spacer(Modifier.height(8.dp))
+                OutlinedButton(onClick = {
+                    context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                }) {
+                    Text("ユーザー補助の設定を開く")
+                }
+            }
+        }
     }
 }
 
@@ -178,50 +272,49 @@ private fun AddGoalDialog(
 }
 
 @Composable
-private fun GoalAppEditor(
-    goal: Goal,
+private fun AppMultiSelectEditor(
+    title: String,
+    subtitle: String,
     installedApps: List<AppInfo>,
-    onSave: (List<String>) -> Unit,
+    initialSelected: Set<String>,
+    onSave: (Set<String>) -> Unit,
     onBack: () -> Unit,
 ) {
-    val selected = remember(goal.id) { mutableStateOf(goal.allowedPackages.toSet()) }
+    var selected by remember { mutableStateOf(initialSelected) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onBack) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "戻る")
             }
-            Text("${goal.emoji} ${goal.label}", style = MaterialTheme.typography.titleLarge)
+            Text(title, style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.weight(1f))
-            TextButton(onClick = { onSave(selected.value.toList()) }) { Text("保存") }
+            TextButton(onClick = { onSave(selected) }) { Text("保存") }
         }
 
         Spacer(Modifier.height(4.dp))
         Text(
-            "この目的で起動できるアプリを選んでください。",
+            subtitle,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Spacer(Modifier.height(8.dp))
-        Divider()
+        HorizontalDivider()
 
         if (installedApps.isEmpty()) {
-            Text(
-                "アプリ一覧を読み込み中…",
-                modifier = Modifier.padding(top = 16.dp),
-            )
+            Text("アプリ一覧を読み込み中…", modifier = Modifier.padding(top = 16.dp))
         } else {
             LazyColumn(modifier = Modifier.weight(1f)) {
                 items(installedApps, key = { it.packageName }) { app ->
-                    val checked = app.packageName in selected.value
+                    val checked = app.packageName in selected
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                selected.value = if (checked) {
-                                    selected.value - app.packageName
+                                selected = if (checked) {
+                                    selected - app.packageName
                                 } else {
-                                    selected.value + app.packageName
+                                    selected + app.packageName
                                 }
                             }
                             .padding(vertical = 8.dp),

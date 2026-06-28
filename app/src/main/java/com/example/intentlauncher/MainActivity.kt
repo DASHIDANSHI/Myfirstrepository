@@ -47,8 +47,11 @@ private fun AppRoot(vm: MainViewModel = viewModel()) {
     val apps by vm.installedApps.collectAsState()
     val activeGoalId by vm.activeGoalId.collectAsState()
     val note by vm.intentionNote.collectAsState()
+    val frictionPackages by vm.frictionPackages.collectAsState()
 
     var showSettings by remember { mutableStateOf(false) }
+
+    val frictionApps = apps.filter { it.packageName in frictionPackages }
 
     // ランチャーに戻る（＝ON_RESUME）たびに目的をリセットし、毎回目的を選び直させる。
     // これが「使いすぎ防止」の核となる仕組み。
@@ -73,7 +76,9 @@ private fun AppRoot(vm: MainViewModel = viewModel()) {
             SettingsScreen(
                 goals = goals,
                 installedApps = apps,
+                frictionPackages = frictionPackages,
                 onSetAllowedApps = vm::setAllowedApps,
+                onSetFrictionApps = vm::setFrictionApps,
                 onAddGoal = vm::addGoal,
                 onRemoveGoal = vm::removeGoal,
                 onBack = { showSettings = false },
@@ -86,6 +91,7 @@ private fun AppRoot(vm: MainViewModel = viewModel()) {
                 goal = activeGoal,
                 note = note,
                 apps = apps,
+                frictionPackages = frictionPackages,
                 onLaunch = { vm.launchApp(it) },
                 onBack = { vm.clearGoal() },
                 onOpenSettings = { showSettings = true },
@@ -97,7 +103,9 @@ private fun AppRoot(vm: MainViewModel = viewModel()) {
             BackHandler(enabled = true) { }
             GoalScreen(
                 goals = goals,
+                frictionApps = frictionApps,
                 onGoalSelected = { goal, n -> vm.selectGoal(goal.id, n) },
+                onOpenFrictionApp = { app, minutes -> vm.openFrictionApp(app.packageName, minutes) },
                 onOpenSettings = { showSettings = true },
             )
         }

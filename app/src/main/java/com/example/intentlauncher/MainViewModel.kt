@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.intentlauncher.data.AppRepository
+import com.example.intentlauncher.data.BlockerStore
 import com.example.intentlauncher.data.GoalRepository
 import com.example.intentlauncher.model.AppInfo
 import com.example.intentlauncher.model.Goal
@@ -20,6 +21,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     private val goalRepo = GoalRepository(app)
     private val appRepo = AppRepository(app)
+    private val blockerStore = BlockerStore(app)
 
     val goals: StateFlow<List<Goal>> = goalRepo.goals
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GoalRepository.defaultGoals)
@@ -34,6 +36,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     /** 目的に添えた自由メモ（任意）。 */
     private val _intentionNote = MutableStateFlow("")
     val intentionNote: StateFlow<String> = _intentionNote.asStateFlow()
+
+    /** がまんリスト（ボタンに出さず、検索＋確認＋時間制限で開くアプリ）のパッケージ名。 */
+    private val _frictionPackages = MutableStateFlow(blockerStore.getFrictionPackages())
+    val frictionPackages: StateFlow<Set<String>> = _frictionPackages.asStateFlow()
 
     init {
         refreshApps()
@@ -74,5 +80,20 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun removeGoal(goalId: String) {
         viewModelScope.launch { goalRepo.saveGoals(goals.value.filterNot { it.id == goalId }) }
+    }
+
+    /** がまんリストを更新する。 */
+    fun setFrictionApps(packages: Set<String>) {
+        blockerStore.setFrictionPackages(packages)
+        _frictionPackages.value = packages
+    }
+
+    /**
+     * がまんアプリを「○分だけ」許可して起動する。
+     * 強制ブロックがONなら、time が過ぎると見張り役が自動で閉じる。
+     */
+    fun openFrictionApp(packageName: String, minutes: Int) {
+        blockerStore.startSession(packageName, minutes * 60_000L)
+        appRepo.launch(packageName)
     }
 }

@@ -38,11 +38,15 @@ fun AppListScreen(
     goal: Goal,
     note: String,
     apps: List<AppInfo>,
+    frictionPackages: Set<String>,
     onLaunch: (String) -> Unit,
     onBack: () -> Unit,
     onOpenSettings: () -> Unit,
 ) {
-    val allowed = apps.filter { it.packageName in goal.allowedPackages }
+    // がまんリストのアプリは、たとえ目的に登録されていてもボタンには出さない。
+    val allowed = apps.filter {
+        it.packageName in goal.allowedPackages && it.packageName !in frictionPackages
+    }
 
     Column(
         modifier = Modifier

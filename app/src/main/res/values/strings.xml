@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">目的ランチャー</string>
+    <string name="accessibility_label">目的ランチャー 強制ブロック</string>
+    <string name="accessibility_description">がまんリストのアプリを、決めた時間が過ぎたら自動で閉じます。手順を踏まずに開いた場合もホームに戻します。画面の中身は読み取りません。</string>
 </resources>
