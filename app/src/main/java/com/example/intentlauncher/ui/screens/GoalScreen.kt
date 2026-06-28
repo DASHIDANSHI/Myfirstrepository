@@ -21,7 +21,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import com.example.intentlauncher.model.AppInfo
 import com.example.intentlauncher.model.Goal
 import com.example.intentlauncher.ui.components.AppIcon
+import com.example.intentlauncher.ui.components.MascotHeader
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -56,7 +56,6 @@ fun GoalScreen(
     onOpenFrictionApp: (AppInfo, Int) -> Unit,
     onOpenSettings: () -> Unit,
 ) {
-    var note by remember { mutableStateOf("") }
     var query by remember { mutableStateOf("") }
     var pendingApp by remember { mutableStateOf<AppInfo?>(null) }
 
@@ -74,37 +73,51 @@ fun GoalScreen(
             .padding(horizontal = 24.dp, vertical = 16.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = clock, style = MaterialTheme.typography.titleMedium)
+            Text(text = clock, style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.weight(1f))
             IconButton(onClick = onOpenSettings) {
                 Icon(Icons.Filled.Settings, contentDescription = "設定")
             }
         }
 
-        Spacer(Modifier.height(12.dp))
-
-        Text(
-            text = "今、何をしたいですか？",
-            style = MaterialTheme.typography.headlineMedium,
-        )
         Spacer(Modifier.height(8.dp))
-        Text(
-            text = "目的を選ぶと、その目的のアプリだけが表示されます。",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
 
-        Spacer(Modifier.height(12.dp))
+        // 変な生き物が「何？」と聞いてくる
+        MascotHeader()
 
+        Spacer(Modifier.height(16.dp))
+
+        // がまんアプリ用の検索ボックス（名前を打って初めて出てくる）
         OutlinedTextField(
-            value = note,
-            onValueChange = { note = it },
-            label = { Text("目的をメモ（任意）") },
+            value = query,
+            onValueChange = { query = it },
+            label = { Text("アプリ名を入力（例: insta）") },
+            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
         )
 
-        Spacer(Modifier.height(12.dp))
+        val matches = if (query.isBlank()) {
+            emptyList()
+        } else {
+            frictionApps.filter { it.label.contains(query.trim(), ignoreCase = true) }
+        }
+        matches.forEach { app ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { pendingApp = app }
+                    .padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                AppIcon(icon = app.icon, contentDescription = app.label, modifier = Modifier.size(36.dp))
+                Spacer(Modifier.size(12.dp))
+                Text(app.label, modifier = Modifier.weight(1f))
+                Text("開く →", style = MaterialTheme.typography.labelLarge)
+            }
+        }
+
+        Spacer(Modifier.height(16.dp))
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -113,47 +126,7 @@ fun GoalScreen(
             modifier = Modifier.weight(1f),
         ) {
             items(goals, key = { it.id }) { goal ->
-                GoalCard(goal = goal, onClick = { onGoalSelected(goal, note) })
-            }
-        }
-
-        // ── がまんアプリ：ボタンには出さず、名前を打って初めて出てくる ──
-        if (frictionApps.isNotEmpty()) {
-            Spacer(Modifier.height(12.dp))
-            HorizontalDivider()
-            Spacer(Modifier.height(12.dp))
-            Text(
-                text = "🚫 がまんアプリ（さがして開く）",
-                style = MaterialTheme.typography.titleSmall,
-            )
-            Spacer(Modifier.height(8.dp))
-            OutlinedTextField(
-                value = query,
-                onValueChange = { query = it },
-                label = { Text("アプリ名を入力（例: insta）") },
-                leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            val matches = if (query.isBlank()) {
-                emptyList()
-            } else {
-                frictionApps.filter { it.label.contains(query.trim(), ignoreCase = true) }
-            }
-            matches.forEach { app ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { pendingApp = app }
-                        .padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    AppIcon(icon = app.icon, contentDescription = app.label, modifier = Modifier.size(36.dp))
-                    Spacer(Modifier.size(12.dp))
-                    Text(app.label, modifier = Modifier.weight(1f))
-                    Text("開く →", style = MaterialTheme.typography.labelLarge)
-                }
+                GoalCard(goal = goal, onClick = { onGoalSelected(goal, "") })
             }
         }
     }
@@ -218,12 +191,12 @@ private fun GoalCard(goal: Goal, onClick: () -> Unit) {
             containerColor = MaterialTheme.colorScheme.primaryContainer,
         ),
         modifier = Modifier
-            .height(120.dp)
+            .height(110.dp)
             .clickable(onClick = onClick),
     ) {
         Box(modifier = Modifier.fillMaxSize().padding(12.dp), contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = goal.emoji, style = MaterialTheme.typography.displaySmall)
+                Text(text = goal.emoji, style = MaterialTheme.typography.headlineMedium)
                 Spacer(Modifier.height(6.dp))
                 Text(
                     text = goal.label,
