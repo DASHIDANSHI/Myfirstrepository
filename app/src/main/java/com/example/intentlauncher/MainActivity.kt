@@ -80,6 +80,7 @@ private fun AppRoot(vm: MainViewModel = viewModel()) {
                 onSetAllowedApps = vm::setAllowedApps,
                 onSetFrictionApps = vm::setFrictionApps,
                 onAddGoal = vm::addGoal,
+                onUpdateGoal = vm::updateGoal,
                 onRemoveGoal = vm::removeGoal,
                 onBack = { showSettings = false },
             )

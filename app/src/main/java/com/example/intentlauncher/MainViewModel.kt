@@ -78,6 +78,16 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch { goalRepo.saveGoals(goals.value + goal) }
     }
 
+    /** 既存カテゴリの絵文字・名前を変更する。 */
+    fun updateGoal(goalId: String, emoji: String, label: String) {
+        viewModelScope.launch {
+            val updated = goals.value.map {
+                if (it.id == goalId) it.copy(emoji = emoji, label = label) else it
+            }
+            goalRepo.saveGoals(updated)
+        }
+    }
+
     fun removeGoal(goalId: String) {
         viewModelScope.launch { goalRepo.saveGoals(goals.value.filterNot { it.id == goalId }) }
     }

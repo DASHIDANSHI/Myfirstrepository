@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -53,6 +54,7 @@ fun SettingsScreen(
     onSetAllowedApps: (goalId: String, packages: List<String>) -> Unit,
     onSetFrictionApps: (Set<String>) -> Unit,
     onAddGoal: (Goal) -> Unit,
+    onUpdateGoal: (goalId: String, emoji: String, label: String) -> Unit,
     onRemoveGoal: (String) -> Unit,
     onBack: () -> Unit,
 ) {
@@ -91,6 +93,7 @@ fun SettingsScreen(
             onEdit = { editingGoalId = it.id },
             onEditFriction = { editingFriction = true },
             onAddGoal = onAddGoal,
+            onUpdateGoal = onUpdateGoal,
             onRemoveGoal = onRemoveGoal,
             onBack = onBack,
         )
@@ -104,10 +107,12 @@ private fun GoalListScreen(
     onEdit: (Goal) -> Unit,
     onEditFriction: () -> Unit,
     onAddGoal: (Goal) -> Unit,
+    onUpdateGoal: (goalId: String, emoji: String, label: String) -> Unit,
     onRemoveGoal: (String) -> Unit,
     onBack: () -> Unit,
 ) {
     var showAddDialog by remember { mutableStateOf(false) }
+    var editingInfo by remember { mutableStateOf<Goal?>(null) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -148,9 +153,9 @@ private fun GoalListScreen(
 
             item {
                 Spacer(Modifier.height(4.dp))
-                Text("目的とアプリ", style = MaterialTheme.typography.titleMedium)
+                Text("カテゴリボタン", style = MaterialTheme.typography.titleMedium)
                 Text(
-                    "目的をタップすると、その目的で起動できるアプリを選べます。",
+                    "タップ：アプリを割り当て／鉛筆：名前と絵文字を編集／ゴミ箱：削除。右上の＋で追加。",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -159,7 +164,7 @@ private fun GoalListScreen(
             items(goals, key = { it.id }) { goal ->
                 Card(modifier = Modifier.fillMaxWidth().clickable { onEdit(goal) }) {
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, top = 4.dp, bottom = 4.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(goal.emoji, style = MaterialTheme.typography.headlineSmall)
@@ -172,6 +177,9 @@ private fun GoalListScreen(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
+                        IconButton(onClick = { editingInfo = goal }) {
+                            Icon(Icons.Filled.Edit, contentDescription = "名前を編集")
+                        }
                         IconButton(onClick = { onRemoveGoal(goal.id) }) {
                             Icon(Icons.Filled.Delete, contentDescription = "削除")
                         }
@@ -182,11 +190,30 @@ private fun GoalListScreen(
     }
 
     if (showAddDialog) {
-        AddGoalDialog(
+        GoalInfoDialog(
+            dialogTitle = "カテゴリを追加",
+            confirmLabel = "追加",
+            initialEmoji = "⭐",
+            initialLabel = "",
             onDismiss = { showAddDialog = false },
             onConfirm = { emoji, label ->
                 onAddGoal(Goal(id = UUID.randomUUID().toString(), emoji = emoji, label = label))
                 showAddDialog = false
+            },
+        )
+    }
+
+    val editing = editingInfo
+    if (editing != null) {
+        GoalInfoDialog(
+            dialogTitle = "カテゴリを編集",
+            confirmLabel = "保存",
+            initialEmoji = editing.emoji,
+            initialLabel = editing.label,
+            onDismiss = { editingInfo = null },
+            onConfirm = { emoji, label ->
+                onUpdateGoal(editing.id, emoji, label)
+                editingInfo = null
             },
         )
     }
@@ -234,16 +261,20 @@ private fun ForceBlockCard() {
 }
 
 @Composable
-private fun AddGoalDialog(
+private fun GoalInfoDialog(
+    dialogTitle: String,
+    confirmLabel: String,
+    initialEmoji: String,
+    initialLabel: String,
     onDismiss: () -> Unit,
     onConfirm: (emoji: String, label: String) -> Unit,
 ) {
-    var emoji by remember { mutableStateOf("⭐") }
-    var label by remember { mutableStateOf("") }
+    var emoji by remember { mutableStateOf(initialEmoji) }
+    var label by remember { mutableStateOf(initialLabel) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("目的を追加") },
+        title = { Text(dialogTitle) },
         text = {
             Column {
                 OutlinedTextField(
@@ -256,7 +287,7 @@ private fun AddGoalDialog(
                 OutlinedTextField(
                     value = label,
                     onValueChange = { label = it },
-                    label = { Text("目的の名前") },
+                    label = { Text("カテゴリの名前") },
                     singleLine = true,
                 )
             }
@@ -265,7 +296,7 @@ private fun AddGoalDialog(
             TextButton(
                 onClick = { onConfirm(emoji.ifBlank { "⭐" }, label.trim()) },
                 enabled = label.isNotBlank(),
-            ) { Text("追加") }
+            ) { Text(confirmLabel) }
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text("キャンセル") } },
     )
