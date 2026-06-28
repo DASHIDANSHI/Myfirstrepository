@@ -36,14 +36,14 @@ class GoalRepository(private val context: Context) {
     companion object {
         /** 初回起動時に表示されるデフォルトの目的。 */
         val defaultGoals: List<Goal> = listOf(
-            Goal("read", "📖", "本よみ"),
+            Goal("read", "📖", "本"),
             Goal("pay", "💳", "レジ"),
-            Goal("map", "🚃", "ちずとでんしゃ"),
+            Goal("map", "🚃", "ちず電車"),
             Goal("gemini", "✨", "ジェミナイ"),
             Goal("weather", "☀️", "天気"),
             Goal("asken", "🥗", "あすけん"),
-            Goal("photo", "📷", "フォト"),
-            Goal("calc", "🧮", "でんたくでんわ"),
+            Goal("utility", "🔧", "ユーティリティ"),
+            Goal("bad", "🙅", "ダメアプリ"),
         )
     }
 }
