@@ -1,12 +1,20 @@
 package com.example.intentlauncher
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -15,11 +23,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import com.example.intentlauncher.data.HomeExtrasStore
 import com.example.intentlauncher.ui.screens.AppListScreen
 import com.example.intentlauncher.ui.screens.GoalScreen
 import com.example.intentlauncher.ui.screens.SettingsScreen
@@ -48,6 +63,9 @@ private fun AppRoot(vm: MainViewModel = viewModel()) {
     val activeGoalId by vm.activeGoalId.collectAsState()
     val note by vm.intentionNote.collectAsState()
     val frictionPackages by vm.frictionPackages.collectAsState()
+
+    val context = LocalContext.current
+    val extrasStore = remember { HomeExtrasStore(context) }
 
     var showSettings by remember { mutableStateOf(false) }
 
@@ -108,7 +126,56 @@ private fun AppRoot(vm: MainViewModel = viewModel()) {
                 onGoalSelected = { goal, n -> vm.selectGoal(goal.id, n) },
                 onOpenFrictionApp = { app, minutes -> vm.openFrictionApp(app.packageName, minutes) },
                 onOpenSettings = { showSettings = true },
+                imageCell0 = { ImageSlot(slot = 0, store = extrasStore) },
+                imageCell1 = { ImageSlot(slot = 1, store = extrasStore) },
             )
+        }
+    }
+}
+
+/** 好きな画像を1枚置ける枠。タップで選び直せる。 */
+@Composable
+private fun ImageSlot(slot: Int, store: HomeExtrasStore) {
+    val context = LocalContext.current
+    var uri by remember { mutableStateOf(store.getImageUri(slot)) }
+
+    val picker = rememberLauncherForActivityResult(
+        ActivityResultContracts.OpenDocument(),
+    ) { picked ->
+        if (picked != null) {
+            runCatching {
+                context.contentResolver.takePersistableUriPermission(
+                    picked, Intent.FLAG_GRANT_READ_URI_PERMISSION,
+                )
+            }
+            store.setImageUri(slot, picked.toString())
+            uri = picked.toString()
+        }
+    }
+
+    val shape = RoundedCornerShape(12.dp)
+    val current = uri
+
+    if (current != null) {
+        AsyncImage(
+            model = current,
+            contentDescription = "お気に入り画像",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(shape)
+                .clickable { picker.launch(arrayOf("image/*")) },
+        )
+    } else {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(shape)
+                .border(1.dp, MaterialTheme.colorScheme.outline, shape)
+                .clickable { picker.launch(arrayOf("image/*")) },
+            contentAlignment = Alignment.Center,
+        ) {
+            Text("＋ 画像", style = MaterialTheme.typography.labelLarge)
         }
     }
 }

@@ -6,14 +6,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -55,14 +53,18 @@ fun GoalScreen(
     onGoalSelected: (Goal, String) -> Unit,
     onOpenFrictionApp: (AppInfo, Int) -> Unit,
     onOpenSettings: () -> Unit,
+    imageCell0: @Composable () -> Unit,
+    imageCell1: @Composable () -> Unit,
 ) {
     var query by remember { mutableStateOf("") }
     var pendingApp by remember { mutableStateOf<AppInfo?>(null) }
 
     var clock by remember { mutableStateOf(currentTime()) }
+    var dateText by remember { mutableStateOf(currentDate()) }
     LaunchedEffect(Unit) {
         while (true) {
             clock = currentTime()
+            dateText = currentDate()
             delay(10_000)
         }
     }
@@ -70,24 +72,31 @@ fun GoalScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 24.dp, vertical = 16.dp),
+            .padding(horizontal = 20.dp, vertical = 12.dp),
     ) {
+        // 時計 ＋ 日付・曜日
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = clock, style = MaterialTheme.typography.titleLarge)
+            Text(text = clock, style = MaterialTheme.typography.headlineSmall)
+            Spacer(Modifier.size(12.dp))
+            Text(
+                text = dateText,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
             Spacer(Modifier.weight(1f))
             IconButton(onClick = onOpenSettings) {
                 Icon(Icons.Filled.Settings, contentDescription = "設定")
             }
         }
 
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(4.dp))
 
         // 変な生き物が「何？」と聞いてくる
         MascotHeader()
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(10.dp))
 
-        // がまんアプリ用の検索ボックス（名前を打って初めて出てくる）
+        // がまんアプリ用の検索ボックス
         OutlinedTextField(
             value = query,
             onValueChange = { query = it },
@@ -117,16 +126,37 @@ fun GoalScreen(
             }
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(10.dp))
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+        // カテゴリボタン＋画像枠を、すべて同じ大きさで画面に収める。
+        // 各行を weight(1f) で等分するのでスクロール不要。
+        Column(
             modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            items(goals, key = { it.id }) { goal ->
-                GoalCard(goal = goal, onClick = { onGoalSelected(goal, "") })
+            goals.chunked(2).forEach { rowGoals ->
+                Row(
+                    modifier = Modifier.fillMaxWidth().weight(1f),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    rowGoals.forEach { goal ->
+                        GoalCard(
+                            goal = goal,
+                            modifier = Modifier.weight(1f).fillMaxHeight(),
+                            onClick = { onGoalSelected(goal, "") },
+                        )
+                    }
+                    if (rowGoals.size == 1) Spacer(Modifier.weight(1f))
+                }
+            }
+
+            // 下段：好きな画像を置ける枠を2つ（ボタンと同じ大きさ）
+            Row(
+                modifier = Modifier.fillMaxWidth().weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                Box(modifier = Modifier.weight(1f).fillMaxHeight()) { imageCell0() }
+                Box(modifier = Modifier.weight(1f).fillMaxHeight()) { imageCell1() }
             }
         }
     }
@@ -185,19 +215,17 @@ private fun FrictionDialog(
 }
 
 @Composable
-private fun GoalCard(goal: Goal, onClick: () -> Unit) {
+private fun GoalCard(goal: Goal, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
         ),
-        modifier = Modifier
-            .height(110.dp)
-            .clickable(onClick = onClick),
+        modifier = modifier.clickable(onClick = onClick),
     ) {
-        Box(modifier = Modifier.fillMaxSize().padding(12.dp), contentAlignment = Alignment.Center) {
+        Box(modifier = Modifier.fillMaxSize().padding(8.dp), contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(text = goal.emoji, style = MaterialTheme.typography.headlineMedium)
-                Spacer(Modifier.height(6.dp))
+                Spacer(Modifier.height(4.dp))
                 Text(
                     text = goal.label,
                     style = MaterialTheme.typography.titleMedium,
@@ -210,3 +238,6 @@ private fun GoalCard(goal: Goal, onClick: () -> Unit) {
 
 private fun currentTime(): String =
     SimpleDateFormat("H:mm", Locale.getDefault()).format(Date())
+
+private fun currentDate(): String =
+    SimpleDateFormat("M月d日(E)", Locale.JAPANESE).format(Date())
