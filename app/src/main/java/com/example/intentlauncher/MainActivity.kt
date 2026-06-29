@@ -1,12 +1,11 @@
 package com.example.intentlauncher
 
-import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -34,7 +33,11 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageContractOptions
+import com.canhub.cropper.CropImageOptions
 import com.example.intentlauncher.data.HomeExtrasStore
+import java.io.File
 import com.example.intentlauncher.ui.screens.AppListScreen
 import com.example.intentlauncher.ui.screens.GoalScreen
 import com.example.intentlauncher.ui.screens.SettingsScreen
@@ -133,24 +136,39 @@ private fun AppRoot(vm: MainViewModel = viewModel()) {
     }
 }
 
-/** 好きな画像を1枚置ける枠。タップで選び直せる。 */
+/** 好きな画像を1枚置ける枠。タップで画像を選び、トリミング（表示位置・拡大）を調整できる。 */
 @Composable
 private fun ImageSlot(slot: Int, store: HomeExtrasStore) {
     val context = LocalContext.current
     var uri by remember { mutableStateOf(store.getImageUri(slot)) }
+    var pendingOut by remember { mutableStateOf<String?>(null) }
 
-    val picker = rememberLauncherForActivityResult(
-        ActivityResultContracts.OpenDocument(),
-    ) { picked ->
-        if (picked != null) {
-            runCatching {
-                context.contentResolver.takePersistableUriPermission(
-                    picked, Intent.FLAG_GRANT_READ_URI_PERMISSION,
-                )
+    val cropLauncher = rememberLauncherForActivityResult(CropImageContract()) { result ->
+        if (result.isSuccessful) {
+            pendingOut?.let { out ->
+                // 古い画像ファイルは削除しておく
+                uri?.let { old -> runCatching { Uri.parse(old).path?.let { File(it).delete() } } }
+                store.setImageUri(slot, out)
+                uri = out
             }
-            store.setImageUri(slot, picked.toString())
-            uri = picked.toString()
         }
+        pendingOut = null
+    }
+
+    fun startCrop() {
+        val file = File(context.filesDir, "frame_${slot}_${System.currentTimeMillis()}.jpg")
+        val outUri = Uri.fromFile(file)
+        pendingOut = outUri.toString()
+        cropLauncher.launch(
+            CropImageContractOptions(
+                uri = null,
+                cropImageOptions = CropImageOptions(
+                    imageSourceIncludeGallery = true,
+                    imageSourceIncludeCamera = false,
+                    customOutputUri = outUri,
+                ),
+            ),
+        )
     }
 
     val shape = RoundedCornerShape(12.dp)
@@ -164,7 +182,7 @@ private fun ImageSlot(slot: Int, store: HomeExtrasStore) {
             modifier = Modifier
                 .fillMaxSize()
                 .clip(shape)
-                .clickable { picker.launch(arrayOf("image/*")) },
+                .clickable { startCrop() },
         )
     } else {
         Box(
@@ -172,7 +190,7 @@ private fun ImageSlot(slot: Int, store: HomeExtrasStore) {
                 .fillMaxSize()
                 .clip(shape)
                 .border(1.dp, MaterialTheme.colorScheme.outline, shape)
-                .clickable { picker.launch(arrayOf("image/*")) },
+                .clickable { startCrop() },
             contentAlignment = Alignment.Center,
         ) {
             Text("＋ 画像", style = MaterialTheme.typography.labelLarge)

@@ -102,7 +102,6 @@ fun GoalScreen(
         OutlinedTextField(
             value = query,
             onValueChange = { query = it },
-            label = { Text("アプリ名を入力") },
             leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
