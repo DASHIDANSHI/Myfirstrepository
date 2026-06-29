@@ -49,8 +49,10 @@ import java.util.Locale
 @Composable
 fun GoalScreen(
     goals: List<Goal>,
-    frictionApps: List<AppInfo>,
+    apps: List<AppInfo>,
+    frictionPackages: Set<String>,
     onGoalSelected: (Goal, String) -> Unit,
+    onLaunchApp: (String) -> Unit,
     onOpenFrictionApp: (AppInfo, Int) -> Unit,
     onOpenSettings: () -> Unit,
     imageCell0: @Composable () -> Unit,
@@ -96,11 +98,11 @@ fun GoalScreen(
 
         Spacer(Modifier.height(10.dp))
 
-        // がまんアプリ用の検索ボックス
+        // アプリ検索ボックス（全アプリ対象。がまんリストのアプリだけ確認＋時間制限を通す）
         OutlinedTextField(
             value = query,
             onValueChange = { query = it },
-            label = { Text("アプリ名を入力（例: insta）") },
+            label = { Text("アプリ名を入力") },
             leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
@@ -109,20 +111,27 @@ fun GoalScreen(
         val matches = if (query.isBlank()) {
             emptyList()
         } else {
-            frictionApps.filter { it.label.contains(query.trim(), ignoreCase = true) }
+            apps.filter { it.label.contains(query.trim(), ignoreCase = true) }
         }
         matches.forEach { app ->
+            val isFriction = app.packageName in frictionPackages
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { pendingApp = app }
+                    .clickable {
+                        if (isFriction) {
+                            pendingApp = app // 確認＋時間制限ダイアログ
+                        } else {
+                            onLaunchApp(app.packageName) // ふつうのアプリはそのまま起動
+                        }
+                    }
                     .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 AppIcon(icon = app.icon, contentDescription = app.label, modifier = Modifier.size(36.dp))
                 Spacer(Modifier.size(12.dp))
                 Text(app.label, modifier = Modifier.weight(1f))
-                Text("開く →", style = MaterialTheme.typography.labelLarge)
+                Text(if (isFriction) "⏱ 開く" else "開く →", style = MaterialTheme.typography.labelLarge)
             }
         }
 
