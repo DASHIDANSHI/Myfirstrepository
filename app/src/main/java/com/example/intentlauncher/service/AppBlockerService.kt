@@ -10,7 +10,8 @@ import com.example.intentlauncher.data.BlockerStore
 /**
  * 前面に出ているアプリを見張る役。
  *
- * - がまんリストのアプリが「許可セッション中」なら、終了時刻にホームへ戻して閉じる。
+ * - がまんリストのアプリが「許可セッション中」なら、1秒ごとに残り時間を見張り、
+ *   終了時刻になったらホームへ戻して閉じる。
  * - 許可セッションが無い（＝検索→確認→時間決めの手順を踏まずに開いた）なら、すぐホームへ戻す。
  *
  * これを動かすには、端末の「設定 → ユーザー補助」でこのサービスをONにする必要がある。
@@ -18,7 +19,7 @@ import com.example.intentlauncher.data.BlockerStore
 class AppBlockerService : AccessibilityService() {
 
     private val handler = Handler(Looper.getMainLooper())
-    private var kickRunnable: Runnable? = null
+    private var monitor: Runnable? = null
     private lateinit var store: BlockerStore
 
     override fun onCreate() {
@@ -30,33 +31,50 @@ class AppBlockerService : AccessibilityService() {
         if (event?.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return
         val pkg = event.packageName?.toString() ?: return
 
-        // 画面が変わるたびに、予約していた「閉じる」をいったん取り消して評価し直す。
-        cancelKick()
-
-        if (pkg == packageName) return // 自分（ランチャー）は対象外
-
         val friction = store.getFrictionPackages()
-        if (pkg !in friction) return // がまんリスト以外は何もしない
-
         val now = System.currentTimeMillis()
-        if (store.isSessionActive(pkg, now)) {
-            // 許可中。残り時間が経ったら閉じるよう予約する。
-            scheduleKick(store.endTime() - now)
-        } else {
-            // 手順を踏んでいない or 時間切れ → すぐ閉じる。
-            blockNow(timeUp = false)
+
+        when {
+            pkg in friction -> {
+                if (store.isSessionActive(pkg, now)) {
+                    // 許可中。時間切れを1秒ごとに見張り続ける。
+                    // （キーボードなど別ウィンドウが出ても止めないのがポイント）
+                    startMonitor()
+                } else {
+                    // 手順を踏んでいない or 時間切れ → すぐ閉じる。
+                    stopMonitor()
+                    blockNow(timeUp = false)
+                }
+            }
+            // キーボードや他アプリの一時的なウィンドウでは何もしない（見張りは維持）。
         }
     }
 
-    private fun scheduleKick(delayMs: Long) {
-        val r = Runnable { blockNow(timeUp = true) }
-        kickRunnable = r
-        handler.postDelayed(r, delayMs.coerceAtLeast(0L))
+    /** 1秒ごとに残り時間をチェックする見張りを開始（多重起動しない）。 */
+    private fun startMonitor() {
+        if (monitor != null) return
+        val r = object : Runnable {
+            override fun run() {
+                val active = store.activePackage()
+                if (active == null) {
+                    stopMonitor()
+                    return
+                }
+                if (System.currentTimeMillis() >= store.endTime()) {
+                    blockNow(timeUp = true)
+                    stopMonitor()
+                    return
+                }
+                handler.postDelayed(this, 1_000L)
+            }
+        }
+        monitor = r
+        handler.postDelayed(r, 1_000L)
     }
 
-    private fun cancelKick() {
-        kickRunnable?.let { handler.removeCallbacks(it) }
-        kickRunnable = null
+    private fun stopMonitor() {
+        monitor?.let { handler.removeCallbacks(it) }
+        monitor = null
     }
 
     private fun blockNow(timeUp: Boolean) {
@@ -69,7 +87,7 @@ class AppBlockerService : AccessibilityService() {
     override fun onInterrupt() {}
 
     override fun onDestroy() {
-        cancelKick()
+        stopMonitor()
         super.onDestroy()
     }
 }
