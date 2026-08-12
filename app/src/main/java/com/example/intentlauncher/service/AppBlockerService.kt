@@ -20,6 +20,7 @@ class AppBlockerService : AccessibilityService() {
 
     private val handler = Handler(Looper.getMainLooper())
     private var monitor: Runnable? = null
+    private var heartbeat: Runnable? = null
     private lateinit var store: BlockerStore
 
     override fun onCreate() {
@@ -29,9 +30,25 @@ class AppBlockerService : AccessibilityService() {
 
     override fun onServiceConnected() {
         super.onServiceConnected()
+        // 「サービスが生きている」印を刻み始める（UIが動作状態を判断するのに使う）。
+        store.setServiceHeartbeat(System.currentTimeMillis())
+        startHeartbeat()
         // サービスが（再）起動したとき、まだセッション中なら見張りを再開する。
         // 動画視聴中などにサービスが一度落ちても、時間切れで確実に閉じられるようにする。
         if (store.activePackage() != null) startMonitor()
+    }
+
+    /** 20秒ごとに心拍を刻む（サービスが生きている限り続く）。 */
+    private fun startHeartbeat() {
+        if (heartbeat != null) return
+        val r = object : Runnable {
+            override fun run() {
+                store.setServiceHeartbeat(System.currentTimeMillis())
+                handler.postDelayed(this, 20_000L)
+            }
+        }
+        heartbeat = r
+        handler.postDelayed(r, 20_000L)
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -103,6 +120,8 @@ class AppBlockerService : AccessibilityService() {
 
     override fun onDestroy() {
         stopMonitor()
+        heartbeat?.let { handler.removeCallbacks(it) }
+        heartbeat = null
         super.onDestroy()
     }
 }

@@ -59,10 +59,18 @@ class BlockerStore(context: Context) {
 
     private fun cooldownKey(pkg: String) = "cooldown_$pkg"
 
+    /** 見張り役サービスが生きている印（心拍）。UIが「本当に動いているか」を判断するのに使う。 */
+    fun setServiceHeartbeat(now: Long) {
+        prefs.edit().putLong(KEY_HEARTBEAT, now).apply()
+    }
+
+    fun serviceHeartbeat(): Long = prefs.getLong(KEY_HEARTBEAT, 0L)
+
     private companion object {
         const val KEY_FRICTION = "friction_packages"
         const val KEY_ACTIVE_PKG = "active_package"
         const val KEY_END_TIME = "end_time"
         const val KEY_ACTIVE_DURATION = "active_duration"
+        const val KEY_HEARTBEAT = "service_heartbeat"
     }
 }

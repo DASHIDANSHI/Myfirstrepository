@@ -2,6 +2,7 @@ package com.example.intentlauncher
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -34,7 +35,9 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.intentlauncher.data.BlockerStore
 import com.example.intentlauncher.data.HomeExtrasStore
+import com.example.intentlauncher.service.AccessibilityUtil
 import com.example.intentlauncher.ui.screens.AppListScreen
 import com.example.intentlauncher.ui.screens.GoalScreen
 import com.example.intentlauncher.ui.screens.SettingsScreen
@@ -66,8 +69,19 @@ private fun AppRoot(vm: MainViewModel = viewModel()) {
 
     val context = LocalContext.current
     val extrasStore = remember { HomeExtrasStore(context) }
+    val blockerStore = remember { BlockerStore(context) }
 
     var showSettings by remember { mutableStateOf(false) }
+
+    // 強制ブロックが「本当に動いているか」を判断する。
+    // ユーザー補助がオフ、または見張り役の心拍が2分以上途切れていたら警告する。
+    // （がまんリストを使っている人にだけ出す）
+    val blockerWarning = frictionPackages.isNotEmpty() && run {
+        val enabled = AccessibilityUtil.isBlockerEnabled(context)
+        val heartbeatFresh =
+            System.currentTimeMillis() - blockerStore.serviceHeartbeat() < 120_000L
+        !(enabled && heartbeatFresh)
+    }
 
     // ランチャーに戻る（＝ON_RESUME）たびに目的をリセットし、毎回目的を選び直させる。
     // これが「使いすぎ防止」の核となる仕組み。
@@ -126,6 +140,10 @@ private fun AppRoot(vm: MainViewModel = viewModel()) {
                 onLaunchApp = { vm.launchApp(it) },
                 onOpenFrictionApp = { app, minutes -> vm.openFrictionApp(app.packageName, minutes) },
                 cooldownRemainingMs = { vm.cooldownRemainingMs(it) },
+                blockerWarning = blockerWarning,
+                onFixBlocker = {
+                    context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                },
                 onOpenSettings = { showSettings = true },
                 imageCell0 = { ImageSlot(slot = 0, store = extrasStore) },
                 imageCell1 = { ImageSlot(slot = 1, store = extrasStore) },

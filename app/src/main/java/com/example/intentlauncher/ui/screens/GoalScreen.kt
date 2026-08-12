@@ -1,6 +1,8 @@
 package com.example.intentlauncher.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.intentlauncher.model.AppInfo
@@ -55,6 +58,8 @@ fun GoalScreen(
     onLaunchApp: (String) -> Unit,
     onOpenFrictionApp: (AppInfo, Int) -> Unit,
     cooldownRemainingMs: (String) -> Long,
+    blockerWarning: Boolean,
+    onFixBlocker: () -> Unit,
     onOpenSettings: () -> Unit,
     imageCell0: @Composable () -> Unit,
     imageCell1: @Composable () -> Unit,
@@ -89,6 +94,24 @@ fun GoalScreen(
             Spacer(Modifier.weight(1f))
             IconButton(onClick = onOpenSettings) {
                 Icon(Icons.Filled.Settings, contentDescription = "設定")
+            }
+        }
+
+        if (blockerWarning) {
+            Spacer(Modifier.height(6.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colorScheme.errorContainer)
+                    .clickable { onFixBlocker() }
+                    .padding(12.dp),
+            ) {
+                Text(
+                    "⚠️ 強制ブロックが動いていません。タップして設定を開き、オフ→オンし直してください。",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onErrorContainer,
+                )
             }
         }
 
