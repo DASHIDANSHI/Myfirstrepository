@@ -27,6 +27,13 @@ class AppBlockerService : AccessibilityService() {
         store = BlockerStore(this)
     }
 
+    override fun onServiceConnected() {
+        super.onServiceConnected()
+        // サービスが（再）起動したとき、まだセッション中なら見張りを再開する。
+        // 動画視聴中などにサービスが一度落ちても、時間切れで確実に閉じられるようにする。
+        if (store.activePackage() != null) startMonitor()
+    }
+
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event?.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return
         val pkg = event.packageName?.toString() ?: return
@@ -78,7 +85,15 @@ class AppBlockerService : AccessibilityService() {
     }
 
     private fun blockNow(timeUp: Boolean) {
+        val pkg = store.activePackage()
+        val durationMs = store.activeDurationMs()
         store.clearSession()
+
+        // 時間切れで閉じたときは、使った時間と同じだけ「クールダウン（再び開けない期間）」を設定。
+        if (timeUp && pkg != null && durationMs > 0L) {
+            store.setCooldownUntil(pkg, System.currentTimeMillis() + durationMs)
+        }
+
         val msg = if (timeUp) "時間になりました。おつかれさま！" else "ここからは開けません。目的を選んでね。"
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
         performGlobalAction(GLOBAL_ACTION_HOME)

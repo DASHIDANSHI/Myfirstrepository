@@ -125,6 +125,7 @@ private fun AppRoot(vm: MainViewModel = viewModel()) {
                 onGoalSelected = { goal, n -> vm.selectGoal(goal.id, n) },
                 onLaunchApp = { vm.launchApp(it) },
                 onOpenFrictionApp = { app, minutes -> vm.openFrictionApp(app.packageName, minutes) },
+                cooldownRemainingMs = { vm.cooldownRemainingMs(it) },
                 onOpenSettings = { showSettings = true },
                 imageCell0 = { ImageSlot(slot = 0, store = extrasStore) },
                 imageCell1 = { ImageSlot(slot = 1, store = extrasStore) },

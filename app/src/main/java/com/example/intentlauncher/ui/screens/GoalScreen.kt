@@ -54,6 +54,7 @@ fun GoalScreen(
     onGoalSelected: (Goal, String) -> Unit,
     onLaunchApp: (String) -> Unit,
     onOpenFrictionApp: (AppInfo, Int) -> Unit,
+    cooldownRemainingMs: (String) -> Long,
     onOpenSettings: () -> Unit,
     imageCell0: @Composable () -> Unit,
     imageCell1: @Composable () -> Unit,
@@ -114,10 +115,12 @@ fun GoalScreen(
         }
         matches.forEach { app ->
             val isFriction = app.packageName in frictionPackages
+            val cooldownMs = if (isFriction) cooldownRemainingMs(app.packageName) else 0L
+            val onCooldown = cooldownMs > 0L
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
+                    .clickable(enabled = !onCooldown) {
                         if (isFriction) {
                             pendingApp = app // 確認＋時間制限ダイアログ
                         } else {
@@ -129,8 +132,20 @@ fun GoalScreen(
             ) {
                 AppIcon(icon = app.icon, contentDescription = app.label, modifier = Modifier.size(36.dp))
                 Spacer(Modifier.size(12.dp))
-                Text(app.label, modifier = Modifier.weight(1f))
-                Text(if (isFriction) "⏱ 開く" else "開く →", style = MaterialTheme.typography.labelLarge)
+                Text(
+                    app.label,
+                    modifier = Modifier.weight(1f),
+                    color = if (onCooldown) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
+                )
+                Text(
+                    text = when {
+                        onCooldown -> "あと${ceilMinutes(cooldownMs)}分"
+                        isFriction -> "⏱ 開く"
+                        else -> "開く →"
+                    },
+                    style = MaterialTheme.typography.labelLarge,
+                    color = if (onCooldown) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary,
+                )
             }
         }
 
@@ -243,6 +258,9 @@ private fun GoalCard(goal: Goal, modifier: Modifier = Modifier, onClick: () -> U
         }
     }
 }
+
+/** 残りミリ秒を「分」に切り上げる（59秒でも「1分」と表示）。 */
+private fun ceilMinutes(ms: Long): Int = ((ms + 59_999L) / 60_000L).toInt()
 
 private fun currentTime(): String =
     SimpleDateFormat("H:mm", Locale.getDefault()).format(Date())

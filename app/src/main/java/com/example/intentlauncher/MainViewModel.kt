@@ -101,9 +101,15 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     /**
      * がまんアプリを「○分だけ」許可して起動する。
      * 強制ブロックがONなら、time が過ぎると見張り役が自動で閉じる。
+     * クールダウン中は開かせない。
      */
     fun openFrictionApp(packageName: String, minutes: Int) {
+        if (cooldownRemainingMs(packageName) > 0L) return
         blockerStore.startSession(packageName, minutes * 60_000L)
         appRepo.launch(packageName)
     }
+
+    /** クールダウンの残り時間（ミリ秒）。0 なら開ける。 */
+    fun cooldownRemainingMs(packageName: String): Long =
+        (blockerStore.cooldownUntil(packageName) - System.currentTimeMillis()).coerceAtLeast(0L)
 }
