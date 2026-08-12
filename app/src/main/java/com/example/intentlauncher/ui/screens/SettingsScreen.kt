@@ -40,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.example.intentlauncher.APP_VERSION
 import com.example.intentlauncher.model.AppInfo
 import com.example.intentlauncher.model.Goal
 import com.example.intentlauncher.service.AccessibilityUtil
@@ -185,6 +186,15 @@ private fun GoalListScreen(
                         }
                     }
                 }
+            }
+
+            item {
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    "バージョン $APP_VERSION",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
         }
     }
