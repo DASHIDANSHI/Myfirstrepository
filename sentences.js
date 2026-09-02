@@ -106,7 +106,23 @@ listen: [
   ["Got it, thank you.", "わかりました、ありがとうございます。", ["discussion"]],
   ["Ah, I see what you mean now.", "ああ、おっしゃる意味がわかりました。", ["discussion"]],
   ["Sorry to make you repeat yourself.", "何度も言わせてしまってすみません。", ["discussion"]],
-  ["Sorry, could you use simpler words? My English is still improving.", "もう少し簡単な言葉でお願いできますか?英語を勉強中なので。", ["discussion"]]
+  ["Sorry, could you use simpler words? My English is still improving.", "もう少し簡単な言葉でお願いできますか?英語を勉強中なので。", ["discussion"]],
+  /* --- 追加分 --- */
+  ["Sorry, I'm having trouble with the accent. Could you say it slowly?", "すみません、その発音に慣れていなくて。ゆっくり言っていただけますか?", ["discussion"]],
+  ["What does that stand for?", "それは何の略ですか?", ["discussion"]],
+  ["Sorry, I don't know that abbreviation.", "すみません、その略語がわかりません。", ["discussion"]],
+  ["Could you type it in the chat? I understand it better in writing.", "チャットに打っていただけますか?文字の方が理解しやすいので。", ["discussion"]],
+  ["Sorry, did you say Monday or Sunday?", "すみません、月曜と日曜、どちらとおっしゃいましたか?", ["discussion"]],
+  ["Sorry, was that a question for the whole group?", "すみません、それは全員への質問でしたか?", ["discussion"]],
+  ["Let me read that back to you.", "読み上げて確認させてください。", ["discussion"]],
+  ["So the action item for me is to send the summary. Is that right?", "つまり私のタスクはまとめを送ることですね。合っていますか?", ["discussion"]],
+  ["Sorry, I need to hear that one more time.", "すみません、もう一度だけ聞かせてください。", ["discussion"]],
+  ["Could you point to it on the screen?", "画面のどこか、指していただけますか?", ["discussion"]],
+  ["Sorry, I understood the first half but not the second.", "すみません、前半はわかりましたが後半がわかりませんでした。", ["discussion"]],
+  ["Is that what you meant?", "そういう意味でしたか?", ["discussion"]],
+  ["Sorry, could you rephrase the question?", "すみません、質問を言い換えていただけますか?", ["discussion"]],
+  ["I want to be sure I'm not misunderstanding.", "誤解していないか確かめたいです。", ["discussion"]],
+  ["Could we go over that one more time before we move on?", "次に進む前に、もう一度確認してもいいですか?", ["discussion"]]
 ],
 
 /* ------------------------------------------------------------------ *
@@ -158,7 +174,23 @@ intro: [
   ["Feel free to correct my English anytime.", "英語はいつでも直してください。", ["discussion"]],
   ["Could you write your name here?", "ここにお名前を書いていただけますか?", ["discussion"]],
   ["Nice to see you again.", "またお会いできてうれしいです。", ["party-reunion"]],
-  ["I'll be working with you in Group B.", "Bグループでご一緒します。", ["discussion"]]
+  ["I'll be working with you in Group B.", "Bグループでご一緒します。", ["discussion"]],
+  /* --- 追加分 --- */
+  ["Here's my business card.", "名刺をどうぞ。", ["morning"]],
+  ["Sorry, I forgot to bring my cards.", "すみません、名刺を持ってくるのを忘れました。", ["morning"]],
+  ["Which group are you in?", "どのグループですか?", ["morning"]],
+  ["I'm in Group B. How about you?", "私はBグループです。あなたは?", ["morning"]],
+  ["I work with data, mostly reports and analysis.", "データ関係の仕事で、主にレポートと分析をしています。", ["morning"]],
+  ["My team handles customer support.", "私のチームはカスタマーサポートを担当しています。", ["morning"]],
+  ["It's my first time meeting colleagues from overseas.", "海外の同僚に会うのは初めてです。", ["party-know"]],
+  ["Could you remind me which office you're from?", "どのオフィスの方でしたっけ?", ["party-reunion"]],
+  ["I saw your name on the list. You're leading Session 3, right?", "リストでお名前を拝見しました。セッション3を担当されていますよね?", ["morning"]],
+  ["Are you the one who presented this morning?", "今朝発表されていた方ですか?", ["break"]],
+  ["That was a great presentation this morning.", "今朝の発表、素晴らしかったです。", ["break"]],
+  ["How do you write your name in English?", "お名前は英語でどう書きますか?", ["party-join"]],
+  ["My family name is Tanaka, and my first name is Kenji.", "名字は田中、名前はケンジです。", ["morning"]],
+  ["In Japan we usually say the family name first.", "日本では普通、名字を先に言います。", ["party-know"]],
+  ["Please stop me if I mispronounce your name.", "お名前を言い間違えたら、遠慮なく止めてください。", ["party-join"]]
 ],
 
 /* ------------------------------------------------------------------ *
@@ -199,7 +231,23 @@ ask: [
   ["Do you happen to know the schedule for tomorrow?", "明日の予定をご存じですか?", ["break"]],
   ["Would you mind repeating the instructions?", "指示をもう一度お願いできますか?", ["discussion"]],
   ["Is it okay to ask questions during the session?", "セッション中に質問してもいいですか?", ["discussion"]],
-  ["Thanks a lot. I really appreciate it.", "どうもありがとうございます。本当に助かります。", ["discussion"]]
+  ["Thanks a lot. I really appreciate it.", "どうもありがとうございます。本当に助かります。", ["discussion"]],
+  /* --- 追加分 --- */
+  ["Could you share that link with me?", "そのリンクを共有していただけますか?", ["discussion"]],
+  ["Would you mind sending it to my email?", "メールに送っていただけますか?", ["discussion"]],
+  ["Is there a printed copy?", "紙の資料はありますか?", ["morning"]],
+  ["Could I get a copy of that?", "それのコピーをいただけますか?", ["discussion"]],
+  ["Do you know if lunch is provided?", "昼食は出るか、ご存じですか?", ["break"]],
+  ["What's the dress code for tonight?", "今夜の服装はどんな感じですか?", ["break"]],
+  ["Do you know how to get to the venue?", "会場への行き方をご存じですか?", ["break"]],
+  ["Could you save me a seat?", "席を取っておいてもらえますか?", ["break"]],
+  ["Could you keep an eye on my bag for a second?", "少しの間、荷物を見ていてもらえますか?", ["break"]],
+  ["Could I ask you for some advice?", "アドバイスをいただけますか?", ["party-know"]],
+  ["Would it be okay to email you after the training?", "研修の後にメールしてもいいですか?", ["party-contact"]],
+  ["Can I add you to the group chat?", "グループチャットに追加してもいいですか?", ["party-contact"]],
+  ["Could you check my English on this slide?", "このスライドの英語を見てもらえますか?", ["discussion"]],
+  ["Is it okay if I answer in short sentences?", "短い文で答えてもいいですか?", ["discussion"]],
+  ["Sorry, could I get past?", "すみません、通らせてもらえますか?", ["party-join"]]
 ],
 
 /* ------------------------------------------------------------------ *
@@ -255,7 +303,28 @@ opinion: [
   ["It depends on the situation.", "状況によります。", ["discussion"]],
   ["That's exactly the problem.", "まさにそこが問題です。", ["discussion"]],
   ["Could you tell me more about that?", "それについてもう少し教えてください。", ["discussion"]],
-  ["Why do you think so?", "なぜそう思いますか?", ["discussion"]]
+  ["Why do you think so?", "なぜそう思いますか?", ["discussion"]],
+  /* --- 追加分 --- */
+  ["Let me think about that for a second.", "少し考えさせてください。", ["discussion"]],
+  ["That's one way to look at it.", "それも一つの見方ですね。", ["discussion"]],
+  ["I'd like to add one more thing.", "もう一つ付け加えたいです。", ["discussion"]],
+  ["Correct me if I'm wrong, but the budget is fixed, right?", "間違っていたら訂正してください。予算は決まっていますよね?", ["discussion"]],
+  ["I'm not against it, but I'd like more information.", "反対ではありませんが、もっと情報がほしいです。", ["discussion"]],
+  ["Can we test it before we decide?", "決める前に試せませんか?", ["discussion"]],
+  ["What's the risk if we do that?", "それをやった場合のリスクは何ですか?", ["discussion"]],
+  ["What happens if it doesn't work?", "うまくいかなかったらどうなりますか?", ["discussion"]],
+  ["Has anyone tried this before?", "これを試したことがある方はいますか?", ["discussion"]],
+  ["In Japan, we usually do it differently.", "日本では、普通はやり方が違います。", ["discussion"]],
+  ["How do you handle this in your office?", "あなたのオフィスでは、どう対応していますか?", ["discussion"]],
+  ["That's interesting — it's the opposite in my team.", "面白いですね。私のチームでは逆です。", ["discussion"]],
+  ["I'd support that if we had more time.", "時間がもっとあれば賛成します。", ["discussion"]],
+  ["Let's be realistic about what we can finish.", "終わらせられる範囲を、現実的に考えましょう。", ["discussion"]],
+  ["I think we're overcomplicating this.", "複雑に考えすぎだと思います。", ["discussion"]],
+  ["Can we keep it simple?", "シンプルにできませんか?", ["discussion"]],
+  ["That's a fair point.", "もっともな指摘です。", ["discussion"]],
+  ["You've convinced me.", "納得しました。", ["discussion"]],
+  ["Actually, I'd like to change my opinion.", "実は、意見を変えたいです。", ["discussion"]],
+  ["Let's write down both options and compare them.", "両方の案を書き出して、比べましょう。", ["discussion"]]
 ],
 
 /* ------------------------------------------------------------------ *
@@ -306,7 +375,33 @@ teamwork: [
   ["Sorry, I need a little more time.", "すみません、もう少し時間が必要です。", ["discussion"]],
   ["Could someone help me with this part?", "この部分を誰か手伝ってもらえますか?", ["discussion"]],
   ["I'm not confident about my English, but I'll try.", "英語に自信はありませんが、やってみます。", ["discussion"]],
-  ["Let's support each other.", "お互いに助け合いましょう。", ["discussion"]]
+  ["Let's support each other.", "お互いに助け合いましょう。", ["discussion"]],
+  /* --- 追加分 --- */
+  ["Shall I start?", "私から始めましょうか?", ["discussion"]],
+  ["Who wants to go first?", "誰から始めますか?", ["discussion"]],
+  ["Let's go around the table.", "一人ずつ順番に話しましょう。", ["discussion"]],
+  ["Let's set a time limit for each person.", "一人あたりの時間を決めましょう。", ["discussion"]],
+  ["Let's spend five minutes on ideas first.", "まず5分、アイデア出しをしましょう。", ["discussion"]],
+  ["Any ideas so far?", "ここまでで、何かアイデアはありますか?", ["discussion"]],
+  ["Let's write everything down first, then choose.", "まず全部書き出して、それから選びましょう。", ["discussion"]],
+  ["Can we group these ideas?", "これらのアイデアをまとめられますか?", ["discussion"]],
+  ["Which one should we drop?", "どれを外しましょうか?", ["discussion"]],
+  ["I think we have enough ideas now.", "もうアイデアは十分だと思います。", ["discussion"]],
+  ["Let's assign the presentation parts.", "発表のパートを割り振りましょう。", ["discussion"]],
+  ["I'd prefer not to present, if that's okay.", "できれば発表は避けたいのですが、よろしいですか?", ["discussion"]],
+  ["I'll do it if nobody else wants to.", "他に希望者がいなければ、私がやります。", ["discussion"]],
+  ["Could you present for our group?", "私たちのグループの発表をお願いできますか?", ["discussion"]],
+  ["How should we structure the presentation?", "発表の構成はどうしましょうか?", ["discussion"]],
+  ["Let's do a quick practice run.", "一度、通しで練習しましょう。", ["discussion"]],
+  ["Who's keeping the time?", "時間は誰が見ますか?", ["discussion"]],
+  ["We're about halfway through.", "だいたい半分終わりました。", ["discussion"]],
+  ["We're behind schedule.", "予定より遅れています。", ["discussion"]],
+  ["Let's skip that part to save time.", "時間節約のため、その部分は飛ばしましょう。", ["discussion"]],
+  ["Is anyone stuck?", "行き詰まっている人はいますか?", ["discussion"]],
+  ["I'm stuck on this part.", "この部分で行き詰まっています。", ["discussion"]],
+  ["Let's make sure we're answering the actual question.", "出された課題にきちんと答えているか、確認しましょう。", ["discussion"]],
+  ["Shall we check with the other group?", "他のグループに確認してみましょうか?", ["discussion"]],
+  ["Thanks for waiting for me.", "待ってくれてありがとう。", ["discussion"]]
 ],
 
 /* ------------------------------------------------------------------ *
@@ -383,7 +478,18 @@ party: [
   ["Have a safe trip home.", "気をつけてお帰りください。", ["party-farewell"]],
   ["I hope we can work together again.", "また一緒に仕事ができるといいですね。", ["party-farewell"]],
   ["Let me know if you ever come to Tokyo.", "東京に来ることがあれば教えてください。", ["party-farewell"]],
-  ["Thanks for everything. See you next time.", "いろいろありがとうございました。またお会いしましょう。", ["party-farewell"]]
+  ["Thanks for everything. See you next time.", "いろいろありがとうございました。またお会いしましょう。", ["party-farewell"]],
+  /* --- 追加分 --- */
+  ["Shall we take a photo together?", "一緒に写真を撮りませんか?", ["party-contact"]],
+  ["Do you mind if I take a photo?", "写真を撮ってもいいですか?", ["party-react"]],
+  ["Is there an after-party?", "二次会はありますか?", ["party-leave"]],
+  ["Are you going to the second place?", "二次会には行きますか?", ["party-leave"]],
+  ["I'll pass tonight, but thanks for asking.", "今夜は遠慮しておきます。誘ってくれてありがとう。", ["party-leave"]],
+  ["Let me move over so you can sit down.", "席を詰めますね、座ってください。", ["party-join"]],
+  ["Sorry, I'll be back in a moment.", "すみません、少し失礼します。", ["party-leave"]],
+  ["The food here is great, isn't it?", "ここの食べ物、おいしいですよね?", ["party-food"]],
+  ["In Japan, we usually pour drinks for each other.", "日本では、お互いにお酌をするのが普通です。", ["party-toast"]],
+  ["How do people toast in your country?", "あなたの国では、乾杯はどうしますか?", ["party-toast"]]
 ],
 
 /* ------------------------------------------------------------------ *
@@ -426,10 +532,31 @@ smalltalk: [
   ["I'm still a bit jet-lagged.", "まだ少し時差ぼけです。", ["party-reunion"]],
   ["Do you have plans after the training?", "研修の後の予定はありますか?", ["party-know"]],
   ["Are you staying in Tokyo for the weekend?", "週末は東京にいますか?", ["party-know"]],
-  ["It was nice chatting with you.", "お話しできてよかったです。", ["party-leave"]],
+  ["It was nice chatting with you.", "お話しできて楽しかったです。", ["party-leave"]],
   ["Let's catch up later.", "また後で話しましょう。", ["break"]],
   ["Sorry, I have to take this call.", "すみません、この電話に出なければなりません。", ["break"]],
-  ["Anyway, how's your project going?", "ところで、プロジェクトはどうですか?", ["party-know"]]
+  ["Anyway, how's your project going?", "ところで、プロジェクトはどうですか?", ["party-know"]],
+  /* --- 追加分 --- */
+  ["Are you a morning person?", "朝型ですか?", ["party-know"]],
+  ["How long did it take you to get here?", "ここまで、どれくらいかかりましたか?", ["party-know"]],
+  ["Do you speak any other languages?", "他に話せる言語はありますか?", ["party-know"]],
+  ["Your English is really good.", "英語がお上手ですね。", ["party-know"]],
+  ["How did you learn English?", "どうやって英語を学びましたか?", ["party-know"]],
+  ["I'm still studying English every day.", "私はまだ毎日、英語を勉強しています。", ["party-know"]],
+  ["What's the hardest part of English for you?", "英語で一番難しいのはどこですか?", ["party-know"]],
+  ["Do you have any tips for me?", "何かコツはありますか?", ["party-know"]],
+  ["What's the weather like there in November?", "そちらの11月の天気は、どんな感じですか?", ["party-know"]],
+  ["Is it winter there now?", "そちらは今、冬ですか?", ["party-know"]],
+  ["Do you celebrate that in your country?", "それは、あなたの国でも祝いますか?", ["party-know"]],
+  ["What's a typical breakfast where you're from?", "ご出身では、朝食は何が一般的ですか?", ["party-food"]],
+  ["Have you tried the convenience store food yet?", "コンビニの食べ物は、もう試しましたか?", ["party-food"]],
+  ["Everyone says the trains here are confusing.", "ここの電車はわかりにくい、とよく言われます。", ["break"]],
+  ["Let me know if you need help getting around.", "移動で困ったら言ってください。", ["break"]],
+  ["Do you need help with the train?", "電車のこと、手伝いましょうか?", ["break"]],
+  ["What do you usually do on weekends?", "週末はいつも何をしていますか?", ["party-know"]],
+  ["Do you play any sports?", "何かスポーツはしますか?", ["party-know"]],
+  ["I'm not very good at it, but I enjoy it.", "上手ではありませんが、楽しんでいます。", ["party-know"]],
+  ["Sorry, I zoned out for a second.", "すみません、少しぼんやりしていました。", ["break"]]
 ],
 
 /* ------------------------------------------------------------------ *
@@ -475,7 +602,28 @@ report: [
   ["We worked on this as a team.", "これはチームで取り組みました。", ["presentation"]],
   ["Everyone contributed a lot.", "全員がたくさん貢献してくれました。", ["presentation"]],
   ["To give you some context, our office started this last year.", "背景をお伝えすると、私たちのオフィスは昨年これを始めました。", ["presentation"]],
-  ["Let me repeat the key message.", "重要なメッセージを繰り返します。", ["presentation"]]
+  ["Let me repeat the key message.", "重要なメッセージを繰り返します。", ["presentation"]],
+  /* --- 追加分 --- */
+  ["Good morning, everyone.", "皆さん、おはようございます。", ["presentation"]],
+  ["I'm Kenji from the Tokyo office, presenting for Group B.", "東京オフィスのケンジです。Bグループを代表して発表します。", ["presentation"]],
+  ["Our presentation has three parts.", "私たちの発表は3部構成です。", ["presentation"]],
+  ["I'll cover the first part, and Priya will cover the rest.", "前半は私が、残りはプリヤさんが担当します。", ["presentation"]],
+  ["Let me start with the problem we found.", "私たちが見つけた課題から始めます。", ["presentation"]],
+  ["The main issue is that users give up too early.", "主な課題は、ユーザーが早々に諦めてしまうことです。", ["presentation"]],
+  ["We looked at it from three angles.", "3つの角度から検討しました。", ["presentation"]],
+  ["Our idea is simple: make the first step shorter.", "私たちのアイデアはシンプルで、最初のステップを短くすることです。", ["presentation"]],
+  ["There are two benefits.", "利点は2つあります。", ["presentation"]],
+  ["First, it saves time. Second, it reduces mistakes.", "一つ目は時間の節約、二つ目はミスの削減です。", ["presentation"]],
+  ["Of course, there are some risks.", "もちろん、リスクもあります。", ["presentation"]],
+  ["We'd need about three months to test it.", "検証には3か月ほど必要です。", ["presentation"]],
+  ["Please take a look at the handout.", "配布資料をご覧ください。", ["presentation"]],
+  ["I'll keep this short.", "手短にお話しします。", ["presentation"]],
+  ["Sorry, I'm running over time. Let me skip to the conclusion.", "すみません、時間を超過しています。結論に飛びます。", ["presentation"]],
+  ["Any feedback is welcome.", "どんなご意見でも歓迎します。", ["presentation"]],
+  ["We'd like to hear if this would work in your office too.", "これが皆さんのオフィスでも機能するか、伺いたいです。", ["presentation"]],
+  ["Thank you for the question. Let me answer in two parts.", "ご質問ありがとうございます。2つに分けてお答えします。", ["presentation"]],
+  ["That's outside what we looked at, but it's a good point.", "それは検討範囲外でしたが、いい指摘です。", ["presentation"]],
+  ["If you'd like more detail, I'm happy to talk after this.", "詳しくお聞きになりたければ、この後お話しします。", ["presentation"]]
 ],
 
 /* ------------------------------------------------------------------ *
@@ -494,7 +642,7 @@ facilitate: [
   ["We'll start again at three.", "3時に再開します。", ["break"]],
   ["Let's move on to the next topic.", "次のトピックに移りましょう。", ["discussion"]],
   ["Could we come back to that later?", "それは後で戻ってもいいですか?", ["discussion"]],
-  ["Let's park that for now.", "それはいったん保留にしましょう。", ["discussion"]],
+  ["Let's park that for now.", "それはいったん棚上げにしましょう。", ["discussion"]],
   ["One at a time, please.", "一人ずつお願いします。", ["discussion"]],
   ["Sorry, I think you were speaking first.", "すみません、先に話していましたよね。", ["discussion"]],
   ["Sorry, I didn't mean to cut you off.", "すみません、遮るつもりはありませんでした。", ["discussion"]],
@@ -516,7 +664,23 @@ facilitate: [
   ["Who will do what by when?", "誰が何をいつまでにやりますか?", ["discussion"]],
   ["I'll send the summary afterwards.", "後でまとめを送ります。", ["discussion"]],
   ["Thank you all for today.", "今日はみなさんありがとうございました。", ["discussion"]],
-  ["See you tomorrow morning.", "また明日の朝に。", ["party-leave"]]
+  ["See you tomorrow morning.", "また明日の朝に。", ["party-leave"]],
+  /* --- 追加分 --- */
+  ["Is everyone here?", "全員そろっていますか?", ["morning"]],
+  ["We're still waiting for two people.", "あと2人待っています。", ["morning"]],
+  ["Let's start without them.", "先に始めましょう。", ["morning"]],
+  ["Could everyone mute their phones?", "皆さん、携帯をマナーモードにしていただけますか?", ["morning"]],
+  ["Let's keep the discussion in English so everyone can follow.", "全員がついていけるよう、議論は英語でいきましょう。", ["discussion"]],
+  ["Sorry, we switched to Japanese. Let me translate.", "すみません、日本語になっていました。訳します。", ["discussion"]],
+  ["Could we hear from someone who hasn't spoken yet?", "まだ話していない方から聞けますか?", ["discussion"]],
+  ["Let's take that offline.", "それは別途、話しましょう。", ["discussion"]],
+  ["We're spending too long on this point.", "この点に時間をかけすぎています。", ["discussion"]],
+  ["Can we agree to disagree and move on?", "意見の相違はそのままにして、先に進みませんか?", ["discussion"]],
+  ["Let me repeat the instructions for everyone.", "皆さんのために、指示を繰り返します。", ["discussion"]],
+  ["Sorry, my battery is dying.", "すみません、バッテリーが切れそうです。", ["trouble"]],
+  ["Does anyone have a charger?", "充電器をお持ちの方はいますか?", ["trouble"]],
+  ["The air conditioning is quite strong, isn't it?", "冷房がかなり強いですね。", ["break"]],
+  ["Have a good evening, everyone.", "皆さん、よい夜を。", ["party-leave"]]
 ]
 
 };
