@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>研修英語トレーナー</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --ink:#1b1f24; --sub:#5c6773; --line:#e2e6ea;
+  --accent:#2f6fed; --accent-ink:#fff;
+  --ok:#1f9d55; --soso:#c98a12; --ng:#d1414a;
+  --pri3:#d1414a; --pri2:#c98a12; --pri1:#7a8794;
+  --radius:12px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",
+    "Yu Gothic UI",Meiryo,sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.6;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:720px;margin:0 auto;padding:0 14px 96px}
+
+header.top{
+  position:sticky;top:0;z-index:20;background:var(--bg);
+  padding:10px 0 6px;border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:baseline;gap:8px;padding:0 2px 8px}
+.brand h1{font-size:17px;margin:0;letter-spacing:.02em}
+.brand .count{font-size:12px;color:var(--sub);margin-left:auto}
+nav.tabs{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+nav.tabs button{
+  flex:1 0 auto;min-width:76px;padding:8px 10px;font-size:13px;cursor:pointer;
+  border:1px solid var(--line);background:var(--card);color:var(--sub);
+  border-radius:9px;font-family:inherit;
+}
+nav.tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+
+section[hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin:12px 0}
+.muted{color:var(--sub)}
+.small{font-size:12px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.spacer{flex:1}
+
+button.btn{
+  font-family:inherit;font-size:14px;padding:10px 14px;border-radius:9px;
+  border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;
+}
+button.btn:hover{border-color:#c8ced5}
+button.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+button.btn.tiny{padding:5px 9px;font-size:12px}
+button.btn:disabled{opacity:.45;cursor:default}
+
+/* ---- 学習カード ---- */
+.statusbar{display:flex;gap:14px;font-size:13px;color:var(--sub);padding:2px 2px 0}
+.statusbar b{color:var(--ink)}
+.qcard{min-height:190px;display:flex;flex-direction:column;justify-content:center;text-align:center;gap:14px}
+.tagline{font-size:11px;color:var(--sub);letter-spacing:.04em}
+.ja{font-size:19px;font-weight:600;line-height:1.55}
+.en{font-size:21px;font-weight:600;color:var(--accent);line-height:1.45;word-break:break-word}
+.hintline{font-size:12px;color:var(--sub)}
+.grades{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.grades button{padding:13px 6px;font-size:13px;font-weight:600;border-radius:10px;border:1px solid var(--line);background:var(--card);cursor:pointer;font-family:inherit}
+.grades .g-ng{color:var(--ng);border-color:#f0c4c7}
+.grades .g-soso{color:var(--soso);border-color:#eedcb4}
+.grades .g-ok{color:var(--ok);border-color:#bfe3cd}
+.grades button small{display:block;font-weight:400;font-size:10px;color:var(--sub);margin-top:2px}
+
+.speakrow{display:flex;gap:6px;justify-content:center;align-items:center;flex-wrap:wrap}
+.done{text-align:center;padding:26px 8px}
+.done .big{font-size:34px}
+
+.banner{background:#fff6e6;border:1px solid #f0d9a8;border-radius:var(--radius);padding:12px 14px;margin:12px 0}
+.banner h3{margin:0 0 6px;font-size:14px}
+
+/* ---- 一覧 ---- */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+select,input[type=text],textarea{
+  font-family:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--line);
+  border-radius:8px;background:var(--card);color:var(--ink);max-width:100%;
+}
+input[type=text],textarea{width:100%}
+textarea{resize:vertical;min-height:52px}
+.item{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.item .en{font-size:15px;color:var(--ink);text-align:left}
+.item .ja{font-size:13px;font-weight:400;color:var(--sub);text-align:left}
+.item .meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.chip{font-size:10.5px;padding:2px 7px;border-radius:999px;background:#eef1f5;color:var(--sub)}
+.chip.box{background:#e7f0ff;color:#2a5db0}
+.chip.pri3{background:#fdeaeb;color:var(--pri3)}
+.chip.pri2{background:#fbf1dc;color:#8a5f0b}
+.chip.pri1{background:#eef1f5;color:var(--pri1)}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:12px;color:var(--sub);margin-bottom:3px}
+
+/* ---- 進捗 ---- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:10px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center}
+.kpi .n{font-size:24px;font-weight:700;line-height:1.2}
+.kpi .l{font-size:11px;color:var(--sub)}
+.bar{height:8px;background:#e9edf1;border-radius:999px;overflow:hidden}
+.bar > i{display:block;height:100%;background:var(--accent);border-radius:999px}
+.catrow{margin:9px 0}
+.catrow .top{display:flex;font-size:12.5px;margin-bottom:3px}
+.catrow .top .r{margin-left:auto;color:var(--sub);font-variant-numeric:tabular-nums}
+.behind{color:var(--ng);font-weight:600}
+.ahead{color:var(--ok);font-weight:600}
+
+/* ---- チートシート ---- */
+.sheet h3{font-size:15px;margin:20px 0 6px;padding-bottom:4px;border-bottom:2px solid var(--accent)}
+.sheet h4{font-size:12.5px;margin:12px 0 4px;color:var(--sub)}
+.sheet table{width:100%;border-collapse:collapse;font-size:13px}
+.sheet td{border-bottom:1px solid var(--line);padding:5px 6px;vertical-align:top}
+.sheet td.e{font-weight:600;width:52%}
+.sheet td.j{color:var(--sub)}
+.note{background:#fff;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;margin:8px 0}
+.note b{display:block;font-size:13px;margin-bottom:3px}
+.note p{margin:0;font-size:12.5px;color:var(--sub)}
+
+@media print{
+  header.top,.noprint{display:none !important}
+  body{background:#fff}
+  .wrap{max-width:none;padding:0}
+  .sheet h3{page-break-after:avoid}
+  .note{page-break-inside:avoid}
+  .card{border:none;padding:0;margin:0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand">
+    <h1>研修英語トレーナー</h1>
+    <span class="count" id="countdown"></span>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="study"    aria-selected="true">学習</button>
+    <button role="tab" data-tab="list"     aria-selected="false">文章一覧</button>
+    <button role="tab" data-tab="sheet"    aria-selected="false">チートシート</button>
+    <button role="tab" data-tab="progress" aria-selected="false">進捗</button>
+  </nav>
+</header>
+
+<!-- ============ 学習 ============ -->
+<section id="tab-study">
+  <div id="trainingBanner"></div>
+
+  <div class="statusbar" id="statusbar"></div>
+
+  <div class="card qcard" id="qcard"></div>
+
+  <div class="card noprint">
+    <div class="row small">
+      <label>再生速度
+        <select id="rateSel">
+          <option value="0.7">0.7x ゆっくり</option>
+          <option value="1" selected>1.0x ふつう</option>
+          <option value="1.2">1.2x 速い(騒音対策)</option>
+        </select>
+      </label>
+      <label class="row" style="gap:4px">
+        <input type="checkbox" id="varietyChk"> <span>音声ランダム(豪・印・英・米)</span>
+      </label>
+    </div>
+    <div class="row small muted" style="margin-top:6px">
+      <span id="voiceInfo"></span>
+    </div>
+  </div>
+
+  <div class="card noprint">
+    <div class="row">
+      <select id="drillSel" style="flex:1;min-width:180px"></select>
+      <button class="btn" id="drillStart">集中モード</button>
+      <button class="btn" id="drillStop" hidden>通常学習に戻る</button>
+    </div>
+    <p class="small muted" style="margin:8px 0 0">
+      集中モードは復習日に関係なく、選んだカテゴリ・場面だけを繰り返します。学習記録(Box)は変わりません。
+    </p>
+  </div>
+</section>
+
+<!-- ============ 文章一覧 ============ -->
+<section id="tab-list" hidden>
+  <div class="card">
+    <b class="small">文章を追加</b>
+    <div class="field" style="margin-top:8px">
+      <label for="addEn">English</label>
+      <input type="text" id="addEn" placeholder="Could you say that again?">
+    </div>
+    <div class="field">
+      <label for="addJa">日本語</label>
+      <input type="text" id="addJa" placeholder="もう一度言っていただけますか?">
+    </div>
+    <div class="row">
+      <select id="addCat"></select>
+      <select id="addScene"></select>
+      <button class="btn primary" id="addBtn">追加</button>
+    </div>
+    <p class="small muted" style="margin:8px 0 0">研修中に聞き取れなかった表現をここに足すと、次の日から復習に出てきます。</p>
+  </div>
+
+  <div class="filters">
+    <select id="fCat"></select>
+    <select id="fScene"></select>
+    <input type="text" id="fText" placeholder="キーワード検索" style="flex:1;min-width:140px">
+  </div>
+  <div class="small muted" id="listCount" style="margin-bottom:8px"></div>
+  <div id="listBody"></div>
+</section>
+
+<!-- ============ チートシート ============ -->
+<section id="tab-sheet" hidden>
+  <div class="row noprint" style="margin:12px 0">
+    <select id="sheetCat"></select>
+    <button class="btn" id="printBtn">印刷 / PDF保存</button>
+  </div>
+  <div class="sheet" id="sheetBody"></div>
+</section>
+
+<!-- ============ 進捗 ============ -->
+<section id="tab-progress" hidden>
+  <div id="progBody"></div>
+  <div class="card noprint">
+    <b class="small">設定</b>
+    <div class="row small" style="margin-top:8px">
+      <label>1日の新規
+        <select id="newPerDaySel">
+          <option value="5">5文</option><option value="10" selected>10文</option>
+          <option value="15">15文</option><option value="20">20文</option>
+        </select>
+      </label>
+      <label>研修初日 <input type="text" id="tStart" style="width:118px"></label>
+      <label>最終日 <input type="text" id="tEnd" style="width:118px"></label>
+    </div>
+  </div>
+  <div class="card noprint">
+    <b class="small">バックアップ</b>
+    <p class="small muted" style="margin:6px 0 10px">
+      学習データはこのブラウザの中だけに保存されます。履歴削除や機種変更で消えるので、週に一度は書き出しておくこと。
+    </p>
+    <div class="row">
+      <button class="btn" id="exportBtn">JSONを書き出す</button>
+      <button class="btn" id="importBtn">JSONを読み込む</button>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn" id="resetBtn" style="color:var(--ng);border-color:#f0c4c7">学習記録を全部消す</button>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script src="sentences.js"></script>
+<script>
+"use strict";
+
+/* ===================== 定数 ===================== */
+var KEY = { custom:"eng.sentences.custom", progress:"eng.progress", state:"eng.state" };
+var INTERVALS = [0, 1, 3, 7, 14, 30];      // Box -> 次回までの日数
+var MASTER_STREAK = 2;                      // Box5 でこの回数連続「できた」→ 習得済み
+var REQUEUE_GAP = 3;                        // 当日再出題までに挟むカード数
+
+/* ===================== 日付ユーティリティ ===================== */
+function todayStr(){ return toStr(new Date()); }
+function toStr(d){
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+function parseDate(s){ var p = String(s).split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+function addDays(s, n){ var d = parseDate(s); d.setDate(d.getDate()+n); return toStr(d); }
+function daysBetween(a, b){ return Math.round((parseDate(b) - parseDate(a)) / 86400000); }
+function isValidDate(s){ return /^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(parseDate(s).getTime()); }
+
+/* ===================== 保存 ===================== */
+function load(key, fallback){
+  try {
+    var raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch (e) { return fallback; }
+}
+function save(key, val){
+  try { localStorage.setItem(key, JSON.stringify(val)); }
+  catch (e) { console.warn("保存に失敗:", e); }
+}
+
+var DEFAULT_STATE = {
+  startDate: todayStr(),
+  trainingDate: "2026-11-02",
+  trainingEndDate: "2026-11-04",
+  lastStudyDate: null,
+  streak: 0,
+  newPerDay: 10,
+  voiceVariety: true,
+  rate: 1,
+  introducedOn: { date: todayStr(), count: 0 },
+  hidden: []
+};
+
+var state    = Object.assign({}, DEFAULT_STATE, load(KEY.state, {}));
+var progress = load(KEY.progress, {});
+var custom   = load(KEY.custom, []);
+if (!state.introducedOn || state.introducedOn.date !== todayStr()) {
+  state.introducedOn = { date: todayStr(), count: 0 };
+}
+if (!Array.isArray(state.hidden)) state.hidden = [];
+
+function saveAll(){ save(KEY.state, state); save(KEY.progress, progress); save(KEY.custom, custom); }
+
+/* ===================== 文章 ===================== */
+function allSentences(){
+  return DEFAULT_SENTENCES.concat(custom).filter(function(s){
+    return state.hidden.indexOf(s.id) === -1;
+  });
+}
+function byId(id){
+  var all = DEFAULT_SENTENCES.concat(custom);
+  for (var i=0;i<all.length;i++) if (all[i].id === id) return all[i];
+  return null;
+}
+function prog(id){
+  if (!progress[id]) progress[id] = { box:0, nextReview:todayStr(), correctStreak:0, introduced:false };
+  return progress[id];
+}
+function isMastered(id){
+  var p = progress[id];
+  return !!p && p.box >= 5 && p.correctStreak >= MASTER_STREAK;
+}
+function catLabel(c){ return (CATEGORIES[c] || {label:c}).label; }
+function sceneLabel(s){ return SCENES[s] || s; }
+
+/* ===================== SRS ===================== */
+function buildQueue(){
+  var t = todayStr(), due = [], fresh = [], all = allSentences();
+  all.forEach(function(s){
+    var p = progress[s.id];
+    if (p && p.introduced) { if (p.nextReview <= t) due.push({ id:s.id, type:"review" }); }
+    else fresh.push({ id:s.id, type:"new" });
+  });
+  var left = Math.max(0, state.newPerDay - state.introducedOn.count);
+  return shuffle(due).concat(fresh.slice(0, left));   // 復習はシャッフル、新規はカリキュラム順
+}
+function shuffle(a){
+  a = a.slice();
+  for (var i=a.length-1;i>0;i--){ var j = Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+function grade(id, result){
+  var p = prog(id), wasNew = !p.introduced;
+  if (result === "ok")      { p.box = Math.min(p.box + 1, 5); p.correctStreak++; }
+  else if (result === "soso"){ p.correctStreak = 0; }
+  else                       { p.box = 0; p.correctStreak = 0; }
+  p.nextReview = addDays(todayStr(), INTERVALS[p.box]);
+  p.introduced = true;
+  if (wasNew) state.introducedOn.count++;
+  markStudied();
+  saveAll();
+  return result !== "ok";   // true なら当日中に再出題
+}
+function markStudied(){
+  var t = todayStr();
+  if (state.lastStudyDate === t) return;
+  state.streak = (state.lastStudyDate === addDays(t, -1)) ? state.streak + 1 : 1;
+  state.lastStudyDate = t;
+}
+
+/* ===================== 音声 ===================== */
+var VOICE_TARGETS = ["en-AU","en-NZ","en-IN","en-GB","en-US"];
+var voices = [];
+function loadVoices(){
+  if (!("speechSynthesis" in window)) return;
+  var all = speechSynthesis.getVoices() || [];
+  voices = all.filter(function(v){
+    return VOICE_TARGETS.some(function(t){ return v.lang && v.lang.replace("_","-").indexOf(t) === 0; });
+  });
+  if (!voices.length) voices = all.filter(function(v){ return v.lang && v.lang.toLowerCase().indexOf("en") === 0; });
+  var info = document.getElementById("voiceInfo");
+  if (info) {
+    info.textContent = voices.length
+      ? "利用できる英語音声 " + voices.length + "種: " + voices.slice(0,6).map(function(v){return v.lang;}).join(", ")
+      : "この端末で使える英語音声が見つかりません(読み上げは使えません)。";
+  }
+}
+function pickVoice(){
+  if (!voices.length) return null;
+  if (state.voiceVariety) return voices[Math.floor(Math.random()*voices.length)];
+  for (var i=0;i<VOICE_TARGETS.length;i++){
+    for (var j=0;j<voices.length;j++){
+      if (voices[j].lang.replace("_","-").indexOf(VOICE_TARGETS[i]) === 0) return voices[j];
+    }
+  }
+  return voices[0];
+}
+function speak(text){
+  if (!("speechSynthesis" in window)) return;
+  try {
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    var v = pickVoice();
+    if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = "en-US"; }
+    u.rate = state.rate;
+    speechSynthesis.speak(u);
+  } catch (e) { console.warn("読み上げに失敗:", e); }
+}
+
+/* ===================== 画面: 学習 ===================== */
+var session = { queue: [], idx: 0, revealed: false, drill: null };
+
+function startSession(){
+  session = { queue: buildQueue(), idx: 0, revealed: false, drill: null };
+  renderStudy();
+}
+function startDrill(filter){
+  var items = allSentences().filter(function(s){
+    if (filter.type === "cat")   return s.category === filter.value;
+    if (filter.type === "scene") return s.scenes.indexOf(filter.value) !== -1;
+    return true;
+  }).map(function(s){ return { id:s.id, type:"drill" }; });
+  session = { queue: shuffle(items), idx: 0, revealed: false, drill: filter };
+  document.getElementById("drillStop").hidden = false;
+  renderStudy();
+}
+function stopDrill(){
+  document.getElementById("drillStop").hidden = true;
+  startSession();
+}
+
+function renderStudy(){
+  var bar = document.getElementById("statusbar");
+  var card = document.getElementById("qcard");
+  var rest = session.queue.slice(session.idx);
+
+  if (session.drill) {
+    var lbl = session.drill.type === "cat" ? catLabel(session.drill.value) : sceneLabel(session.drill.value);
+    bar.innerHTML = '<span>集中モード: <b>' + esc(lbl) + '</b></span><span class="spacer"></span><span>残り <b>' + rest.length + '</b></span>';
+  } else {
+    var nr = rest.filter(function(x){ return x.type === "review"; }).length;
+    var nn = rest.filter(function(x){ return x.type === "new"; }).length;
+    bar.innerHTML = '<span>復習 <b>' + nr + '</b></span><span>新規 <b>' + nn + '</b></span>' +
+      '<span class="spacer"></span><span>連続 <b>' + state.streak + '</b>日</span>';
+  }
+
+  if (session.idx >= session.queue.length) {
+    card.innerHTML = session.drill
+      ? '<div class="done"><div class="big">✓</div><p>ひと通り終わりました。</p>' +
+        '<button class="btn" onclick="startDrill(session.drill)">もう一周</button> ' +
+        '<button class="btn primary" onclick="stopDrill()">通常学習に戻る</button></div>'
+      : '<div class="done"><div class="big">🎉</div><p>今日の分は終わりです。<br>' +
+        '<span class="small muted">連続' + state.streak + '日。明日また続けましょう。</span></p>' +
+        '<button class="btn" onclick="startDrill({type:\'cat\',value:\'listen\'})">聞き返しをもう少し練習</button></div>';
+    return;
+  }
+
+  var item = session.queue[session.idx];
+  var s = byId(item.id);
+  if (!s) { session.idx++; return renderStudy(); }
+  var p = progress[s.id] || { box:0 };   // 表示のみ。ここでは記録を作らない
+  var tag = catLabel(s.category) + (s.scenes.length ? " / " + sceneLabel(s.scenes[0]) : "") +
+            (item.type === "new" ? "  ・はじめて" : "  ・Box " + p.box);
+
+  if (!session.revealed) {
+    card.innerHTML =
+      '<div class="tagline">' + esc(tag) + '</div>' +
+      '<div class="ja">' + esc(s.ja) + '</div>' +
+      '<div class="hintline">声に出して英語で言ってから確認</div>' +
+      '<div><button class="btn primary" id="revealBtn">答えを見る</button></div>';
+    document.getElementById("revealBtn").onclick = function(){ session.revealed = true; renderStudy(); };
+  } else {
+    var grades = session.drill
+      ? '<div><button class="btn primary" id="nextBtn">次へ</button></div>'
+      : '<div class="grades">' +
+          '<button class="g-ng"   data-g="ng">わからなかった<small>Box 0 に戻る</small></button>' +
+          '<button class="g-soso" data-g="soso">微妙<small>据え置き・当日再出題</small></button>' +
+          '<button class="g-ok"   data-g="ok">できた<small>次の Box へ</small></button>' +
+        '</div>';
+    card.innerHTML =
+      '<div class="tagline">' + esc(tag) + '</div>' +
+      '<div class="ja muted" style="font-size:14px;font-weight:400">' + esc(s.ja) + '</div>' +
+      '<div class="en">' + esc(s.en) + '</div>' +
+      '<div class="speakrow noprint">' +
+        '<button class="btn tiny" id="playBtn">🔊 聞く</button>' +
+        '<span class="small muted">聞いたら3回音読</span>' +
+      '</div>' + grades;
+    document.getElementById("playBtn").onclick = function(){ speak(s.en); };
+    speak(s.en);
+    if (session.drill) {
+      document.getElementById("nextBtn").onclick = function(){ session.idx++; session.revealed = false; renderStudy(); };
+    } else {
+      Array.prototype.forEach.call(card.querySelectorAll(".grades button"), function(b){
+        b.onclick = function(){
+          var again = grade(s.id, b.dataset.g);
+          if (again) {
+            var at = Math.min(session.idx + 1 + REQUEUE_GAP, session.queue.length);
+            session.queue.splice(at, 0, { id:s.id, type:"review" });
+          }
+          session.idx++; session.revealed = false;
+          renderStudy();
+        };
+      });
+    }
+  }
+}
+
+/* 研修当日バナー */
+function renderTrainingBanner(){
+  var el = document.getElementById("trainingBanner"), t = todayStr();
+  el.innerHTML = "";
+  if (t < state.trainingDate || t > state.trainingEndDate) return;
+  var day = daysBetween(state.trainingDate, t) + 1;
+  var focus = TRAINING_DAY_FOCUS[day - 1];
+  if (!focus) return;
+  var btns = focus.scenes.map(function(sc){
+    return '<button class="btn tiny" onclick="startDrill({type:\'scene\',value:\'' + sc + '\'})">' + esc(sceneLabel(sc)) + '</button>';
+  }).concat(focus.categories.map(function(c){
+    return '<button class="btn tiny" onclick="startDrill({type:\'cat\',value:\'' + c + '\'})">' + esc(catLabel(c)) + '</button>';
+  })).join(" ");
+  el.innerHTML =
+    '<div class="banner"><h3>研修 ' + day + '日目 — ' + esc(focus.label) + '</h3>' +
+    '<p class="small" style="margin:0 0 8px">朝の5分、今日使う場面だけ流しておく。夜は聞き取れなかった表現を「文章一覧」から追加。</p>' +
+    '<div class="row">' + btns + '</div></div>';
+}
+
+/* ===================== 画面: 一覧 ===================== */
+function renderList(){
+  var cat = document.getElementById("fCat").value;
+  var scene = document.getElementById("fScene").value;
+  var q = document.getElementById("fText").value.trim().toLowerCase();
+  var rows = allSentences().filter(function(s){
+    if (cat && s.category !== cat) return false;
+    if (scene && s.scenes.indexOf(scene) === -1) return false;
+    if (q && (s.en + " " + s.ja).toLowerCase().indexOf(q) === -1) return false;
+    return true;
+  });
+  document.getElementById("listCount").textContent = rows.length + " 件";
+  document.getElementById("listBody").innerHTML = rows.map(function(s){
+    var p = progress[s.id];
+    var boxChip = p && p.introduced
+      ? '<span class="chip box">Box ' + p.box + (isMastered(s.id) ? " ✓習得" : "") + '</span>'
+      : '<span class="chip">未学習</span>';
+    return '<div class="item"><div class="en">' + esc(s.en) + '</div>' +
+      '<div class="ja">' + esc(s.ja) + '</div><div class="meta">' +
+      '<span class="chip pri' + (s.priority||2) + '">' + esc(catLabel(s.category)) + '</span>' +
+      s.scenes.map(function(x){ return '<span class="chip">' + esc(sceneLabel(x)) + '</span>'; }).join("") +
+      boxChip + '<span class="spacer"></span>' +
+      (s.isCustom
+        ? '<button class="btn tiny" data-edit="' + s.id + '">編集</button> <button class="btn tiny" data-del="' + s.id + '">削除</button>'
+        : '<button class="btn tiny" data-hide="' + s.id + '">出題しない</button>') +
+      '</div></div>';
+  }).join("") || '<p class="muted small">該当する文章がありません。</p>';
+
+  var body = document.getElementById("listBody");
+  Array.prototype.forEach.call(body.querySelectorAll("[data-del]"), function(b){
+    b.onclick = function(){
+      if (!confirm("この文章を削除します。よろしいですか?")) return;
+      custom = custom.filter(function(x){ return x.id !== b.dataset.del; });
+      delete progress[b.dataset.del];
+      saveAll(); renderList();
+    };
+  });
+  Array.prototype.forEach.call(body.querySelectorAll("[data-hide]"), function(b){
+    b.onclick = function(){
+      state.hidden.push(b.dataset.hide); saveAll(); renderList();
+    };
+  });
+  Array.prototype.forEach.call(body.querySelectorAll("[data-edit]"), function(b){
+    b.onclick = function(){
+      var s = byId(b.dataset.edit);
+      var en = prompt("English", s.en); if (en === null) return;
+      var ja = prompt("日本語", s.ja); if (ja === null) return;
+      s.en = en.trim() || s.en; s.ja = ja.trim() || s.ja;
+      saveAll(); renderList();
+    };
+  });
+}
+function addSentence(){
+  var en = document.getElementById("addEn").value.trim();
+  var ja = document.getElementById("addJa").value.trim();
+  if (!en || !ja) { alert("English と 日本語 の両方を入力してください。"); return; }
+  var scene = document.getElementById("addScene").value;
+  custom.push({
+    id: "u-" + Date.now(),
+    en: en, ja: ja,
+    category: document.getElementById("addCat").value,
+    scenes: scene ? [scene] : [],
+    priority: 3,          // 自分で足したものは、必要だと感じたもの = 優先
+    isCustom: true
+  });
+  saveAll();
+  document.getElementById("addEn").value = "";
+  document.getElementById("addJa").value = "";
+  renderList(); renderHeader();
+}
+
+/* ===================== 画面: チートシート ===================== */
+function renderSheet(){
+  var only = document.getElementById("sheetCat").value;
+  var cats = only ? [only] : CATEGORY_ORDER.concat(custom.length ? ["custom"] : []);
+  var html = "";
+  cats.forEach(function(cat){
+    var rows = allSentences().filter(function(s){ return s.category === cat; });
+    if (!rows.length) return;
+    html += "<h3>" + esc(catLabel(cat)) + "</h3>";
+    var groups = {}, order = [];
+    rows.forEach(function(s){
+      var k = s.scenes[0] || "";
+      if (!groups[k]) { groups[k] = []; order.push(k); }
+      groups[k].push(s);
+    });
+    order.forEach(function(k){
+      if (k) html += "<h4>" + esc(sceneLabel(k)) + "</h4>";
+      html += "<table><tbody>" + groups[k].map(function(s){
+        return "<tr><td class='e'>" + esc(s.en) + "</td><td class='j'>" + esc(s.ja) + "</td></tr>";
+      }).join("") + "</tbody></table>";
+    });
+  });
+  if (!only) {
+    html += "<h3>多国籍の場で気をつけること</h3>";
+    CULTURE_NOTES.forEach(function(n){
+      html += '<div class="note"><b>' + esc(n.title) + "</b><p>" + esc(n.body) + "</p></div>";
+    });
+    html += "<h3>聞き取りの備え</h3><div class='note'><p>" +
+      LISTENING_TIPS.map(esc).join("<br><br>") + "</p></div>";
+  }
+  document.getElementById("sheetBody").innerHTML = html;
+}
+
+/* ===================== 画面: 進捗 ===================== */
+function renderProgress(){
+  var all = allSentences(), t = todayStr();
+  var introduced = all.filter(function(s){ return progress[s.id] && progress[s.id].introduced; });
+  var mastered = all.filter(function(s){ return isMastered(s.id); });
+  var toTraining = daysBetween(t, state.trainingDate);
+  var elapsed = Math.max(0, daysBetween(state.startDate, t));
+  var planned = Math.min(all.length, (elapsed + 1) * state.newPerDay);
+  var diff = introduced.length - planned;
+
+  var html = '<div class="kpis">' +
+    kpi(toTraining > 0 ? toTraining : (toTraining === 0 ? "本番" : "終了"), toTraining > 0 ? "研修まで(日)" : "研修") +
+    kpi(state.streak, "連続学習(日)") +
+    kpi(mastered.length, "習得済み") +
+    kpi(introduced.length + " / " + all.length, "着手した文") +
+  '</div>';
+
+  html += '<div class="card"><div class="row small"><b>カリキュラム進捗</b>' +
+    '<span class="spacer"></span><span class="' + (diff < 0 ? "behind" : "ahead") + '">' +
+    (diff < 0 ? "予定より " + (-diff) + "文 遅れ" : "予定より " + diff + "文 先行") + '</span></div>' +
+    '<div class="bar" style="margin:8px 0 4px"><i style="width:' +
+      (all.length ? Math.round(introduced.length / all.length * 100) : 0) + '%"></i></div>' +
+    '<div class="small muted">開始 ' + esc(state.startDate) + ' / 予定 ' + planned + '文 / 実績 ' + introduced.length + '文</div></div>';
+
+  html += '<div class="card"><b class="small">カテゴリ別の定着</b>';
+  CATEGORY_ORDER.concat(custom.length ? ["custom"] : []).forEach(function(cat){
+    var rows = all.filter(function(s){ return s.category === cat; });
+    if (!rows.length) return;
+    var m = rows.filter(function(s){ return isMastered(s.id); }).length;
+    var pct = Math.round(m / rows.length * 100);
+    var pri = (CATEGORIES[cat] || {}).priority || 2;
+    html += '<div class="catrow"><div class="top"><span>' +
+      (pri === 3 ? "★★★ " : pri === 2 ? "★★ " : "★ ") + esc(catLabel(cat)) +
+      '</span><span class="r">' + m + "/" + rows.length + " (" + pct + '%)</span></div>' +
+      '<div class="bar"><i style="width:' + pct + '%;background:' +
+        (pri === 3 ? "var(--pri3)" : pri === 2 ? "var(--pri2)" : "var(--pri1)") + '"></i></div></div>';
+  });
+  html += '<p class="small muted" style="margin:10px 0 0">★★★ が遅れている場合は、集中モードでそこから埋めること。</p></div>';
+
+  if (state.hidden.length) {
+    html += '<div class="card"><b class="small">出題しない設定の文章: ' + state.hidden.length + '件</b> ' +
+      '<button class="btn tiny" id="unhideBtn">全部戻す</button></div>';
+  }
+  document.getElementById("progBody").innerHTML = html;
+  var ub = document.getElementById("unhideBtn");
+  if (ub) ub.onclick = function(){ state.hidden = []; saveAll(); renderProgress(); renderList(); renderHeader(); };
+}
+function kpi(n, l){ return '<div class="kpi"><div class="n">' + esc(String(n)) + '</div><div class="l">' + esc(l) + '</div></div>'; }
+
+/* ===================== 共通 ===================== */
+function esc(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+  });
+}
+function renderHeader(){
+  var d = daysBetween(todayStr(), state.trainingDate);
+  var el = document.getElementById("countdown");
+  el.textContent = d > 0 ? "研修まで " + d + "日 ・ 全" + allSentences().length + "文"
+                 : d === 0 ? "研修初日 ・ 全" + allSentences().length + "文"
+                 : "全" + allSentences().length + "文";
+}
+function fillSelect(el, opts, placeholder){
+  el.innerHTML = (placeholder ? '<option value="">' + esc(placeholder) + "</option>" : "") +
+    opts.map(function(o){ return '<option value="' + esc(o[0]) + '">' + esc(o[1]) + "</option>"; }).join("");
+}
+
+/* ===================== 初期化 ===================== */
+function init(){
+  var catOpts = CATEGORY_ORDER.map(function(c){ return [c, catLabel(c)]; });
+  var catOptsAll = catOpts.concat([["custom", catLabel("custom")]]);
+  var sceneOpts = Object.keys(SCENES).map(function(s){ return [s, sceneLabel(s)]; });
+
+  fillSelect(document.getElementById("fCat"), catOptsAll, "すべてのカテゴリ");
+  fillSelect(document.getElementById("fScene"), sceneOpts, "すべての場面");
+  fillSelect(document.getElementById("addCat"), catOptsAll, null);
+  document.getElementById("addCat").value = "custom";
+  fillSelect(document.getElementById("addScene"), sceneOpts, "場面なし");
+  fillSelect(document.getElementById("sheetCat"), catOptsAll, "全カテゴリ + 文化メモ");
+  fillSelect(document.getElementById("drillSel"),
+    catOpts.map(function(o){ return [ "cat:"+o[0], "カテゴリ: " + o[1] ]; })
+      .concat(sceneOpts.map(function(o){ return [ "scene:"+o[0], "場面: " + o[1] ]; })), null);
+
+  document.querySelectorAll("nav.tabs button").forEach(function(b){
+    b.onclick = function(){
+      document.querySelectorAll("nav.tabs button").forEach(function(x){ x.setAttribute("aria-selected", x === b); });
+      ["study","list","sheet","progress"].forEach(function(t){
+        document.getElementById("tab-" + t).hidden = (t !== b.dataset.tab);
+      });
+      if (b.dataset.tab === "list") renderList();
+      if (b.dataset.tab === "sheet") renderSheet();
+      if (b.dataset.tab === "progress") renderProgress();
+    };
+  });
+
+  var rateSel = document.getElementById("rateSel");
+  rateSel.value = String(state.rate);
+  rateSel.onchange = function(){ state.rate = parseFloat(rateSel.value); saveAll(); };
+  var varietyChk = document.getElementById("varietyChk");
+  varietyChk.checked = !!state.voiceVariety;
+  varietyChk.onchange = function(){ state.voiceVariety = varietyChk.checked; saveAll(); };
+
+  document.getElementById("drillStart").onclick = function(){
+    var v = document.getElementById("drillSel").value.split(":");
+    startDrill({ type: v[0], value: v[1] });
+  };
+  document.getElementById("drillStop").onclick = stopDrill;
+
+  document.getElementById("addBtn").onclick = addSentence;
+  ["fCat","fScene"].forEach(function(id){ document.getElementById(id).onchange = renderList; });
+  document.getElementById("fText").oninput = renderList;
+  document.getElementById("sheetCat").onchange = renderSheet;
+  document.getElementById("printBtn").onclick = function(){ window.print(); };
+
+  var nSel = document.getElementById("newPerDaySel");
+  nSel.value = String(state.newPerDay);
+  nSel.onchange = function(){ state.newPerDay = parseInt(nSel.value, 10); saveAll(); startSession(); renderProgress(); };
+
+  var tS = document.getElementById("tStart"), tE = document.getElementById("tEnd");
+  tS.value = state.trainingDate; tE.value = state.trainingEndDate;
+  tS.onchange = function(){
+    if (!isValidDate(tS.value)) { alert("YYYY-MM-DD の形式で入力してください。"); tS.value = state.trainingDate; return; }
+    state.trainingDate = tS.value; saveAll(); renderHeader(); renderProgress(); renderTrainingBanner();
+  };
+  tE.onchange = function(){
+    if (!isValidDate(tE.value)) { alert("YYYY-MM-DD の形式で入力してください。"); tE.value = state.trainingEndDate; return; }
+    state.trainingEndDate = tE.value; saveAll(); renderTrainingBanner();
+  };
+
+  document.getElementById("exportBtn").onclick = function(){
+    var blob = new Blob([JSON.stringify({ version:1, exportedAt:new Date().toISOString(), state:state, progress:progress, custom:custom }, null, 2)],
+      { type:"application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "eng-trainer-" + todayStr() + ".json";
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+  };
+  document.getElementById("importBtn").onclick = function(){ document.getElementById("importFile").click(); };
+  document.getElementById("importFile").onchange = function(e){
+    var f = e.target.files[0]; if (!f) return;
+    var r = new FileReader();
+    r.onload = function(){
+      try {
+        var d = JSON.parse(r.result);
+        if (!d || typeof d !== "object" || !d.progress) throw new Error("形式が違います");
+        if (!confirm("現在の学習データを、読み込んだ内容で置き換えます。よろしいですか?")) return;
+        state = Object.assign({}, DEFAULT_STATE, d.state || {});
+        progress = d.progress || {};
+        custom = Array.isArray(d.custom) ? d.custom : [];
+        if (!Array.isArray(state.hidden)) state.hidden = [];
+        saveAll(); location.reload();
+      } catch (err) { alert("読み込めませんでした: " + err.message); }
+    };
+    r.readAsText(f);
+    e.target.value = "";
+  };
+  document.getElementById("resetBtn").onclick = function(){
+    if (!confirm("学習記録・追加した文章をすべて消します。取り消せません。よろしいですか?")) return;
+    localStorage.removeItem(KEY.state); localStorage.removeItem(KEY.progress); localStorage.removeItem(KEY.custom);
+    location.reload();
+  };
+
+  if ("speechSynthesis" in window) {
+    loadVoices();
+    speechSynthesis.onvoiceschanged = loadVoices;
+  } else {
+    document.getElementById("voiceInfo").textContent = "このブラウザは読み上げに対応していません。";
+  }
+
+  renderHeader();
+  renderTrainingBanner();
+  startSession();
+  saveAll();
+}
+init();
+</script>
+</body>
+</html>
