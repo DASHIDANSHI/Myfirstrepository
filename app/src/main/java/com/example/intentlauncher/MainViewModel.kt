@@ -109,7 +109,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         appRepo.launch(packageName)
     }
 
-    /** クールダウンの残り時間（ミリ秒）。0 なら開ける。 */
+    /** クールダウンの残り時間（ミリ秒）。全がまんアプリ共通。0 なら開ける。 */
     fun cooldownRemainingMs(packageName: String): Long =
-        (blockerStore.cooldownUntil(packageName) - System.currentTimeMillis()).coerceAtLeast(0L)
+        (blockerStore.cooldownUntil() - System.currentTimeMillis()).coerceAtLeast(0L)
 }

@@ -49,15 +49,15 @@ class BlockerStore(context: Context) {
     fun isSessionActive(packageName: String, now: Long): Boolean =
         activePackage() == packageName && now < endTime()
 
-    /** クールダウン（時間切れ後、しばらく開けない期間）の終了時刻を設定・取得する。 */
-    fun setCooldownUntil(packageName: String, until: Long) {
-        prefs.edit().putLong(cooldownKey(packageName), until).apply()
+    /**
+     * クールダウン（時間切れ後、しばらく開けない期間）の終了時刻。
+     * 全てのがまんアプリ共通。どれか1つを使い切ると、全部がこの時刻まで開けなくなる。
+     */
+    fun setCooldownUntil(until: Long) {
+        prefs.edit().putLong(KEY_COOLDOWN_UNTIL, until).apply()
     }
 
-    fun cooldownUntil(packageName: String): Long =
-        prefs.getLong(cooldownKey(packageName), 0L)
-
-    private fun cooldownKey(pkg: String) = "cooldown_$pkg"
+    fun cooldownUntil(): Long = prefs.getLong(KEY_COOLDOWN_UNTIL, 0L)
 
     /** 見張り役サービスが生きている印（心拍）。UIが「本当に動いているか」を判断するのに使う。 */
     fun setServiceHeartbeat(now: Long) {
@@ -71,6 +71,7 @@ class BlockerStore(context: Context) {
         const val KEY_ACTIVE_PKG = "active_package"
         const val KEY_END_TIME = "end_time"
         const val KEY_ACTIVE_DURATION = "active_duration"
+        const val KEY_COOLDOWN_UNTIL = "cooldown_until"
         const val KEY_HEARTBEAT = "service_heartbeat"
     }
 }

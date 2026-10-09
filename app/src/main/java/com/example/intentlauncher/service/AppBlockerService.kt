@@ -102,13 +102,13 @@ class AppBlockerService : AccessibilityService() {
     }
 
     private fun blockNow(timeUp: Boolean) {
-        val pkg = store.activePackage()
         val durationMs = store.activeDurationMs()
         store.clearSession()
 
-        // 時間切れで閉じたときは、使った時間と同じだけ「クールダウン（再び開けない期間）」を設定。
-        if (timeUp && pkg != null && durationMs > 0L) {
-            store.setCooldownUntil(pkg, System.currentTimeMillis() + durationMs)
+        // 時間切れで閉じたときは、使った時間と同じだけ「クールダウン」を設定。
+        // 全てのがまんアプリが、この間は開けなくなる。
+        if (timeUp && durationMs > 0L) {
+            store.setCooldownUntil(System.currentTimeMillis() + durationMs)
         }
 
         val msg = if (timeUp) "時間になりました。おつかれさま！" else "ここからは開けません。目的を選んでね。"

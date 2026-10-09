@@ -12,8 +12,8 @@ android {
         applicationId = "com.example.intentlauncher"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "2026-08-12b"
+        versionCode = 4
+        versionName = "2026-10-09a"
     }
 
     buildTypes {
